@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Antrian - ANTRE.in</title>
+    <!-- Hubungkan ke Tailwind CSS dan Alpine.js hasil compile Vite -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" x-data="{ step: 1, waktu_layanan: '' }">
+
+    <div class="flex min-h-screen">
+        
+        <!-- SIDEBAR KIRI -->
+        <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden md:flex">
+            <div>
+                <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10 pl-2">
+                    ANTRE.in
+                </div>
+                <nav class="space-y-2">
+                    <!-- Beranda -->
+                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">home</span>
+                        <span class="font-medium text-sm">Beranda</span>
+                    </a>
+                    
+                    <!-- Monitoring Antrian -->
+                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">analytics</span>
+                        <span class="font-medium text-sm">Monitoring Antrian</span>
+                    </a>
+                    
+                    <!-- Tambah Antrian (State Aktif) -->
+                    <div class="relative flex items-center">
+                        <div class="absolute left-[-24px] w-1.5 h-6 bg-black rounded-r-md"></div>
+                        <a href="{{ route('tambah.antrian') }}" class="flex items-center space-x-3 text-gray-900 font-bold p-3 w-full">
+                            <span class="material-icons-outlined text-xl text-black">add_box</span>
+                            <span class="text-sm">Tambah Antrian</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Riwayat Antrian -->
+                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">history</span>
+                        <span class="font-medium text-sm">Riwayat Antrian</span>
+                    </a>
+                    
+                    <!-- Akun Saya -->
+                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">person</span>
+                        <span class="font-medium text-sm">Akun Saya</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA HALAMAN -->
+        <main class="flex-1 p-8 md:p-12 flex justify-center items-start">
+            <div class="w-full max-w-3xl">
+                
+                <!-- TOP BAR -->
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+                    <div class="flex flex-col">
+                        <h2 class="text-3xl font-bold text-gray-700 tracking-tight leading-none">Tambah</h2>
+                        <h2 class="text-3xl font-bold text-gray-700 tracking-tight mt-1 leading-none">Antrian</h2>
+                    </div>
+
+                    <!-- Kolom Pencarian -->
+                    <div class="flex-1 max-w-xs mx-0 md:mx-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition shadow-sm">
+                            <span class="material-icons-outlined absolute right-3 top-2.5 text-gray-400 text-sm">search</span>
+                        </div>
+                    </div>
+
+                    <!-- Profil User (Dummy Data Jelita Admin) -->
+                    <div class="flex items-center space-x-3 self-end md:self-auto">
+                        <div class="text-right">
+                            <h4 class="font-bold text-gray-800 text-xs leading-tight">Halo, {{ Auth::user()->name ?? 'Jelita Admin' }}</h4>
+                            <p class="text-[10px] text-gray-400">{{ Auth::user()->nim ?? '220101001' }}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 border border-gray-300">
+                            <span class="material-icons-outlined text-xl">account_circle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROGRESS BAR INDIKATOR KAPSUL (Sembunyikan jika sudah di step 5 nomor antrian) -->
+                <div x-show="step < 5" class="flex items-center justify-between gap-3 mb-10 w-full">
+                    <!-- Kapsul 1 (Biodata) -->
+                    <div class="w-full h-3 rounded-full border transition-colors duration-300"
+                         :class="step >= 1 ? 'bg-blue-500 border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
+                    <!-- Kapsul 2 (Layanan) -->
+                    <div class="w-full h-3 rounded-full transition-colors duration-300"
+                         :class="step >= 2 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
+                    <!-- Kapsul 3 (Upload Berkas) -->
+                    <div class="w-full h-3 rounded-full transition-colors duration-300"
+                         :class="step >= 3 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
+                    <!-- Kapsul 4 (Waktu Layanan) -->
+                    <div class="w-full h-3 rounded-full transition-colors duration-300"
+                         :class="step >= 4 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
+                </div>
+
+                <!-- FORM MULTI-STEP -->
+                <form id="queueForm" action="#" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <!-- STEP 1: BIODATA -->
+                    <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
+                        <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Lengkapi biodata dibawah ini!</p>
+
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">Nama Lengkap</label>
+                                <input type="text" id="nama" name="nama" required value="{{ Auth::user()->name ?? 'Jelita Admin' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">NIM</label>
+                                <input type="text" id="nim" name="nim" required value="{{ Auth::user()->nim ?? '220101001' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">Email</label>
+                                <input type="email" id="email" name="email" required value="{{ Auth::user()->email ?? 'admin@antrein.com' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">Nomor WhatsApp</label>
+                                <input type="text" id="whatsapp" name="whatsapp" required value="{{ Auth::user()->whatsapp ?? '081234567890' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
+                            </div>
+
+                            <div class="pt-6">
+                                <button type="button" 
+                                        @click="if(document.getElementById('nama').checkValidity() && document.getElementById('nim').checkValidity() && document.getElementById('email').checkValidity() && document.getElementById('whatsapp').checkValidity()) { step = 2; } else { document.getElementById('queueForm').reportValidity(); }" 
+                                        class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                    <span>Lanjutkan</span>
+                                    <span class="material-icons-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: LAYANAN -->
+                    <div x-show="step === 2" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
+                        <button type="button" @click="step = 1" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
+                            <span class="material-icons-outlined text-xl">arrow_back</span>
+                        </button>
+
+                        <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Layanan</h3>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Pilih layanan yang dibutuhkan</p>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-3">Jenis Layanan</label>
+                                <div class="space-y-3 pl-1">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" id="layanan_pembayaran" name="layanan" value="Pembayaran UKT" required class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600 font-medium">Pembayaran</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" id="layanan_administrasi" name="layanan" value="Administrasi Kampus" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600 font-medium">Administrasi</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-2">Kategori Jenis Layanan</label>
+                                <textarea id="kategori_layanan" name="kategori_layanan" required placeholder="Ketikkan detail kategori atau keterangan jenis layanan disini..." 
+                                    class="w-full h-44 border border-gray-300 rounded-[20px] bg-white p-4 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 transition resize-none shadow-sm"></textarea>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="button" 
+                                        @click="if(document.getElementById('kategori_layanan').checkValidity() && (document.getElementById('layanan_pembayaran').checked || document.getElementById('layanan_administrasi').checked)) { step = 3; } else { document.getElementById('queueForm').reportValidity(); }"
+                                        class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                    <span>Lanjutkan</span>
+                                    <span class="material-icons-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: UPLOAD BERKAS -->
+                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
+                        <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
+                            <span class="material-icons-outlined text-xl">arrow_back</span>
+                        </button>
+
+                        <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Upload Berkas</h3>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload berkas yang dibutuhkan</p>
+
+                        <div class="space-y-6">
+                            <div class="flex flex-col items-center justify-center w-full">
+                                <label class="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
+                                        <p class="text-xs font-semibold text-gray-500">Tambahkan File</p>
+                                    </div>
+                                    <input type="file" id="berkas" name="berkas" required class="hidden" @change="if(document.getElementById('berkas').files.length > 0) { }"/>
+                                </label>
+                            </div>
+
+                            <div class="w-full bg-white border border-gray-300 rounded-full py-2.5 px-6 flex items-center justify-between text-xs font-semibold text-gray-500 shadow-sm">
+                                <span>Upload</span>
+                                <span class="material-icons-outlined text-base">cloud_upload</span>
+                            </div>
+
+                            <div class="pt-8">
+                                <button type="button" @click="if(document.getElementById('berkas').files.length > 0) { step = 4; } else { alert('Silakan tambahkan file berkas terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                    <span>Lanjutkan</span>
+                                    <span class="material-icons-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: WAKTU LAYANAN (BARU SESUAI image_57bf9f.png) -->
+                    <div x-show="step === 4" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
+                        <button type="button" @click="step = 3" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
+                            <span class="material-icons-outlined text-xl">arrow_back</span>
+                        </button>
+
+                        <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Waktu Layanan</h3>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Pilih waktu layanan dibawah ini</p>
+
+                        <!-- Pilihan Card Sesi Kembar Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                            <!-- Sesi A -->
+                            <div @click="waktu_layanan = '08.00-12.00 WIB'" 
+                                 :class="waktu_layanan === '08.00-12.00 WIB' ? 'border-blue-500 bg-blue-50/30' : 'border-gray-200'"
+                                 class="border-2 rounded-[24px] p-8 text-center cursor-pointer transition hover:border-blue-400 flex flex-col items-center justify-center min-h-[180px]">
+                                <span class="text-5xl font-bold text-gray-700 mb-3">A</span>
+                                <span class="text-xs font-semibold text-gray-500 tracking-wide">08.00-12.00 WIB</span>
+                            </div>
+
+                            <!-- Sesi B -->
+                            <div @click="waktu_layanan = '13.30-16.00 WIB'" 
+                                 :class="waktu_layanan === '13.30-16.00 WIB' ? 'border-blue-500 bg-blue-50/30' : 'border-gray-200'"
+                                 class="border-2 rounded-[24px] p-8 text-center cursor-pointer transition hover:border-blue-400 flex flex-col items-center justify-center min-h-[180px]">
+                                <span class="text-5xl font-bold text-gray-700 mb-3">B</span>
+                                <span class="text-xs font-semibold text-gray-500 tracking-wide">13.30-16.00 WIB</span>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Input untuk dikirim ke Backend Laravel -->
+                        <input type="hidden" name="waktu_layanan" :value="waktu_layanan" required>
+
+                        <!-- Tombol Kirim Form -->
+                        <div>
+                            <button type="button" @click="if(waktu_layanan !== '') { step = 5; } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                <span>Kirim</span>
+                                <span class="material-icons-outlined text-sm">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: HASIL TAMPILAN NOMOR ANTRIAN (BARU SESUAI image_57c2e1.png) -->
+                    <div x-show="step === 5" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all flex flex-col items-center">
+                        <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
+                        <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
+
+                        <!-- Box Angka Besar -->
+                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none">
+                            A-09
+                        </div>
+
+                        <!-- Ringkasan Data Antrian -->
+                        <div class="w-full max-w-md mt-8 space-y-4 text-xs px-4">
+                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-gray-400 font-medium">Jenis Pelayanan</span>
+                                <span class="text-gray-700 font-bold" x-text="document.getElementById('layanan_pembayaran').checked ? 'Pembayaran UKT' : 'Administrasi Kampus'">Pembayaran UKT</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400 font-medium">Waktu Pelayanan</span>
+                                <span class="text-gray-700 font-bold" x-text="waktu_layanan">08.00-12.00 WIB</span>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Menuju Monitoring Antrian -->
+                        <div class="w-full pt-12">
+                            <a href="#" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                <span>Monitoring Antrian</span>
+                                <span class="material-icons-outlined text-sm">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

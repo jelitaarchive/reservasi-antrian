@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="flex min-h-screen bg-gray-100 font-sans text-gray-800">
         
-        <!-- SIDEBAR KIRI (Tetap Sama) -->
+        <!-- SIDEBAR KIRI -->
         <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden md:flex">
             <div>
                 <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10">
@@ -16,7 +16,7 @@
                         <span class="material-icons-outlined text-xl">analytics</span>
                         <span>Monitoring Antrian</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('tambah.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">add_box</span>
                         <span>Tambah Antrian</span>
                     </a>
@@ -36,17 +36,15 @@
         <main class="flex-1 p-6 md:p-10 flex justify-center items-start">
             <div class="w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                 
-                <!-- HEADER ATAS (Navigasi Back, Cari, & Profil) -->
+                <!-- HEADER ATAS -->
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
                     <div class="flex items-center space-x-4">
-                        <!-- Tombol Back ke Dashboard Kembali -->
                         <a href="{{ route('dashboard') }}" class="w-10 h-10 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-100 transition">
                             <span class="material-icons-outlined">arrow_back</span>
                         </a>
                         <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Beranda</h2>
                     </div>
 
-                    <!-- Input Pencarian -->
                     <div class="flex-1 max-w-md mx-0 md:mx-4">
                         <div class="relative">
                             <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition">
@@ -54,25 +52,24 @@
                         </div>
                     </div>
 
-                    <!-- Identitas Akun Pengguna -->
                     <div class="flex items-center space-x-3 self-end md:self-auto">
                         <div class="text-right">
                             <h4 class="font-bold text-gray-900 text-sm">Halo, {{ Auth::user()->name }}</h4>
                             <p class="text-xs text-gray-400">STI202303000</p>
                         </div>
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex-items-center justify-center text-gray-600">
                             <span class="material-icons-outlined">account_circle</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- GRID KARTU MENU ADMINISTRASI (5 Pilihan Sesuai Figma) -->
+                <!-- GRID KARTU MENU ADMINISTRASI -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <!-- 1. Pengajuan Skripsi/TA -->
                     <div class="border border-gray-200 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition bg-white">
                         <div class="flex items-start space-x-4 mb-4">
-                            <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div> <!-- Placeholder Lingkaran Abu-Abu -->
+                            <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pengajuan Skripsi/TA</h3>
                                 <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
@@ -85,7 +82,7 @@
                                 <li>Lorem ipsum dolor sit amet</li>
                                 <li>Lorem ipsum dolor sit amet</li>
                             </ol>
-                            <button class="w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition">Antri</button>
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 
@@ -105,7 +102,7 @@
                                 <li>Lorem ipsum dolor sit amet</li>
                                 <li>Lorem ipsum dolor sit amet</li>
                             </ol>
-                            <button class="w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition">Antri</button>
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 
@@ -125,7 +122,7 @@
                                 <li>Lorem ipsum dolor sit amet</li>
                                 <li>Lorem ipsum dolor sit amet</li>
                             </ol>
-                            <button class="w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition">Antri</button>
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 
@@ -145,7 +142,7 @@
                                 <li>Lorem ipsum dolor sit amet</li>
                                 <li>Lorem ipsum dolor sit amet</li>
                             </ol>
-                            <button class="w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition">Antri</button>
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 
@@ -165,7 +162,7 @@
                                 <li>Lorem ipsum dolor sit amet</li>
                                 <li>Lorem ipsum dolor sit amet</li>
                             </ol>
-                            <button class="w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition">Antri</button>
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 
