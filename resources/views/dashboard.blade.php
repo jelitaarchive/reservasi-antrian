@@ -23,7 +23,7 @@
                         <span class="material-icons-outlined text-xl">add_box</span>
                         <span>Tambah Antrian</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('antrean.riwayat') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">history</span>
                         <span>Riwayat Antrian</span>
                     </a>
