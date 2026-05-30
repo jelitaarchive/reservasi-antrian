@@ -7,6 +7,35 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// MAHASISWA
+Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
+
+    Route::get('/mahasiswa/dashboard', function () {
+        return view('mahasiswa.dashboard');
+    });
+
+});
+
+
+// ADMINISTRASI
+Route::middleware(['auth', 'role:administrasi'])->group(function () {
+
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    });
+
+});
+
+
+// SISTEM
+Route::middleware(['auth', 'role:sistem'])->group(function () {
+
+    Route::get('/sistem/dashboard', function () {
+        return view('sistem.dashboard');
+    });
+
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -1,47 +1,70 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <div class="w-[320px] bg-white rounded-[30px] p-8 shadow-lg relative overflow-hidden">
+
+        <div class="absolute top-[-60px] left-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
+        <div class="absolute bottom-[-60px] right-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
+
+        <h1 class="text-2xl font-bold mb-10">ANTRE.in</h1>
+
+        <div class="flex justify-end mb-8">
+            <a href="{{ route('register') }}"
+               class="bg-gray-600 text-white px-6 py-2 rounded-full">
+                Daftar
+            </a>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <div class="bg-gray-200 rounded-[30px] p-6">
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <h2 class="text-2xl font-bold mb-6">LOGIN</h2>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="mb-4">
+                    <label class="text-sm">NIM</label>
+
+                    <input type="text"
+                        name="nim"
+                        class="w-full rounded-full border-gray-300"
+                        required>
+                </div>
+
+                <div class="mb-6">
+
+                <div class="flex justify-between items-center mb-1">
+
+                    <label class="text-sm">Password</label>
+
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}"
+                        class="text-xs text-blue-500 hover:underline">
+                            Lupa Password?
+                        </a>
+                    @endif
+
+                </div>
+
+                <input type="password"
+                    name="password"
+                    class="w-full rounded-full border-gray-300"
+                    required>
+
+                </div>
+
+                <button type="submit"
+                        class="w-full border rounded-full py-2 bg-white hover:bg-gray-100">
+                    Masuk
+                </button>
+
+            </form>
+
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+</div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>
