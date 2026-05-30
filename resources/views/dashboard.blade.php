@@ -51,7 +51,8 @@
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-900 mb-1">Pembayaran</h3>
                             <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <a href="#" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
+                            <!-- href di bawah ini sudah diarahkan ke route pembayaran -->
+                            <a href="{{ route('pembayaran') }}" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
                         </div>
                     </div>
 

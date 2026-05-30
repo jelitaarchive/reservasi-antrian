@@ -41,6 +41,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/pembayaran', function () {
+    return view('pembayaran'); // <-- Diubah menjadi 'pembayaran' saja karena filenya di luar folder mahasiswa
+})->middleware(['auth'])->name('pembayaran');
+
 Route::middleware('auth')->group(function () {
     /** @slots profile */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
