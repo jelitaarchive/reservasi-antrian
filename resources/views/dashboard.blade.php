@@ -59,12 +59,14 @@
                     <!-- KARTU MENU 2: ADMINISTRASI -->
                     <div class="border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-md transition">
                         <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <!-- Placeholder Gambar Ilustrasi -->
                             <span class="text-gray-300 text-sm">[ Ilustrasi ]</span>
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-900 mb-1">Administrasi</h3>
                             <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <a href="#" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
+                            <!-- href di bawah ini sudah diarahkan ke route administrasi -->
+                            <a href="{{ route('administrasi') }}" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
                         </div>
                     </div>
 
