@@ -11,7 +11,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     Route::get('/mahasiswa/dashboard', function () {
-        return view('mahasiswa.dashboard');
+        return view('dashboard'); // Menampilkan file Figma jika URL ini diakses
     });
 
 });
@@ -36,11 +36,13 @@ Route::middleware(['auth', 'role:sistem'])->group(function () {
 
 });
 
+// Dashboard Utama (Desain Figma)
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    /** @slots profile */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -24,24 +24,25 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-    $request->authenticate();
+        $request->authenticate();
 
-    $request->session()->regenerate();
+        $request->session()->regenerate();
 
-    if (auth()->user()->role == 'mahasiswa') {
+        // Mengarahkan mahasiswa langsung ke /dashboard utama (desain figma)
+        if (auth()->user()->role == 'mahasiswa') {
 
-        return redirect('/mahasiswa/dashboard');
+            return redirect('/dashboard');
 
-    } elseif (auth()->user()->role == 'administrasi') {
+        } elseif (auth()->user()->role == 'administrasi') {
 
-        return redirect('/admin/dashboard');
+            return redirect('/admin/dashboard');
 
-    } elseif (auth()->user()->role == 'sistem') {
+        } elseif (auth()->user()->role == 'sistem') {
 
-        return redirect('/sistem/dashboard');
-    }
+            return redirect('/sistem/dashboard');
+        }
 
-    return redirect('/');
+        return redirect('/');
     }
 
     /**
