@@ -1,70 +1,138 @@
-<x-guest-layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ANTRE.in</title>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-[#efefef] min-h-screen overflow-hidden">
 
-    <div class="w-[320px] bg-white rounded-[30px] p-8 shadow-lg relative overflow-hidden">
+    <!-- Blur -->
+    <div class="absolute top-0 left-0 w-72 h-72 bg-gray-300 rounded-full blur-3xl opacity-60"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gray-300 rounded-full blur-3xl opacity-60"></div>
+    <div class="absolute bottom-0 right-0 w-72 h-72 bg-gray-300 rounded-full blur-3xl opacity-60"></div>
 
-        <div class="absolute top-[-60px] left-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
-        <div class="absolute bottom-[-60px] right-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
+    <!-- Navbar -->
+    <nav class="relative z-10 flex justify-between items-center px-16 py-8">
 
-        <h1 class="text-2xl font-bold mb-10">ANTRE.in</h1>
+        <h1 class="text-4xl font-bold">
+            ANTRE.in
+        </h1>
 
-        <div class="flex justify-end mb-8">
-            <a href="{{ route('register') }}"
-               class="bg-gray-600 text-white px-6 py-2 rounded-full">
-                Daftar
+        <div class="flex items-center gap-10">
+
+            <a href="/" class="text-lg">
+                Beranda
             </a>
+
+            <a href="#" class="text-lg">
+                Reservasi
+            </a>
+
+            <a href="#" class="text-lg">
+                Atur Jadwal
+            </a>
+
+            <a href="{{ route('register') }}"
+               class="bg-gray-600 text-white px-8 py-4 rounded-full text-xl font-semibold">
+
+                Daftar
+
+            </a>
+
         </div>
 
-        <div class="bg-gray-200 rounded-[30px] p-6">
+    </nav>
 
-            <h2 class="text-2xl font-bold mb-6">LOGIN</h2>
+    <!-- Content -->
+    <div class="relative z-10 flex justify-between items-center px-16 mt-8">
 
-            <form method="POST" action="{{ route('login') }}">
+        <!-- Login Card -->
+        <div class="bg-gray-300 w-[420px] rounded-[40px] p-10">
+
+            <h2 class="text-5xl font-bold mb-12">
+                LOGIN
+            </h2>
+
+            <form id="loginForm"
+                  method="POST"
+                  action="{{ route('login') }}">
+
                 @csrf
 
-                <div class="mb-4">
-                    <label class="text-sm">NIM</label>
+                <div class="mb-5">
+                    <label class="block mb-2">
+                        NIM
+                    </label>
 
-                    <input type="text"
+                    <input
+                        type="text"
                         name="nim"
-                        class="w-full rounded-full border-gray-300"
-                        required>
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-8">
 
-                <div class="flex justify-between items-center mb-1">
+                    <div class="flex justify-between mb-2">
 
-                    <label class="text-sm">Password</label>
+                        <label>
+                            Password
+                        </label>
 
-                    @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}"
-                        class="text-xs text-blue-500 hover:underline">
+                           class="text-blue-600 text-sm">
+
                             Lupa Password?
+
                         </a>
-                    @endif
+
+                    </div>
+
+                    <input
+                        type="password"
+                        name="password"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
 
                 </div>
 
-                <input type="password"
-                    name="password"
-                    class="w-full rounded-full border-gray-300"
-                    required>
+                <div class="text-center">
+
+                    Belum memiliki akun?
+
+                    <a href="{{ route('register') }}"
+                       class="text-blue-600">
+
+                        Daftar
+
+                    </a>
 
                 </div>
-
-                <button type="submit"
-                        class="w-full border rounded-full py-2 bg-white hover:bg-gray-100">
-                    Masuk
-                </button>
 
             </form>
 
         </div>
 
+        <!-- Tombol Login -->
+        <div class="flex-1 flex justify-center items-center">
+
+            <button
+                type="submit"
+                form="loginForm"
+                class="border border-gray-500 rounded-full px-36 py-5 text-2xl">
+
+                Masuk
+
+            </button>
+
+        </div>
+
     </div>
 
-</div>
-
-</x-guest-layout>
+</body>
+</html>

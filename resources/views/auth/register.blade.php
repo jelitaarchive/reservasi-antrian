@@ -1,87 +1,193 @@
-<x-guest-layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - ANTRE.in</title>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-[#efefef]">
 
-    <div class="w-[320px] bg-white rounded-[30px] p-8 shadow-lg relative overflow-hidden">
+<div class="min-h-screen">
 
-        <div class="absolute top-[-60px] left-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
-        <div class="absolute bottom-[-60px] right-[-60px] w-40 h-40 bg-gray-300 rounded-full blur-2xl opacity-50"></div>
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center px-20 py-8">
 
-        <h1 class="text-2xl font-bold mb-10">ANTRE.in</h1>
+        <h1 class="text-5xl font-bold">
+            ANTRE.in
+        </h1>
 
-        <div class="flex justify-end mb-8">
+        <div class="flex items-center gap-12">
+
+            <a href="/" class="text-xl hover:text-blue-500">
+                Beranda
+            </a>
+
+            <a href="#" class="text-xl hover:text-blue-500">
+                Reservasi
+            </a>
+
+            <a href="#" class="text-xl hover:text-blue-500">
+                Atur Jadwal
+            </a>
+
             <a href="{{ route('login') }}"
-               class="bg-gray-600 text-white px-6 py-2 rounded-full">
+               class="bg-gray-700 text-white px-10 py-4 rounded-full text-xl font-semibold">
                 Masuk
             </a>
+
         </div>
 
-        <div class="bg-gray-200 rounded-[30px] p-6">
+    </nav>
 
-            <h2 class="text-2xl font-bold mb-6">DAFTAR</h2>
+    <!-- Content -->
+    <div class="flex justify-between items-center px-20 mt-10">
 
-            <form method="POST" action="{{ route('register') }}">
+        <!-- Card Register -->
+        <div class="bg-gray-300 rounded-[40px] p-10 w-[500px] shadow-lg">
+
+            <h2 class="text-5xl font-bold mb-6">
+                DAFTAR
+            </h2>
+
+            <!-- ERROR VALIDASI -->
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- SUCCESS -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form id="registerForm"
+                  method="POST"
+                  action="{{ route('register') }}">
+
                 @csrf
 
-                <div class="mb-3">
-                    <label class="text-sm">Nama</label>
+                <!-- NIM -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        NIM
+                    </label>
 
-                    <input type="text"
-                           name="name"
-                           class="w-full rounded-full border-gray-300"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="text-sm">NIM</label>
-
-                    <input type="text"
+                    <input
+                        type="text"
                         name="nim"
-                        class="w-full rounded-full border-gray-300"
-                        required>
+                        value="{{ old('nim') }}"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
                 </div>
 
-                <div class="mb-3">
-                    <label class="text-sm">Email</label>
+                <!-- Nama -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        Nama Lengkap
+                    </label>
 
-                    <input type="email"
-                           name="email"
-                           class="w-full rounded-full border-gray-300"
-                           required>
+                    <input
+                        type="text"
+                        name="name"
+                        value="{{ old('name') }}"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
                 </div>
 
-                <div class="mb-3">
-                    <label class="text-sm">Nomor Telepon</label>
+                <!-- Email -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        Email
+                    </label>
 
-                    <input type="text"
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
+                </div>
+
+                <!-- Phone -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        Nomor WhatsApp
+                    </label>
+
+                    <input
+                        type="text"
                         name="phone"
-                        class="w-full rounded-full border-gray-300">
+                        value="{{ old('phone') }}"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                    >
                 </div>
 
-                <div class="mb-3">
-                    <label class="text-sm">Password</label>
+                <!-- Password -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        Password
+                    </label>
 
-                    <input type="password"
-                           name="password"
-                           class="w-full rounded-full border-gray-300"
-                           required>
+                    <input
+                        type="password"
+                        name="password"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
                 </div>
 
-                <div class="mb-6">
-                    <label class="text-sm">Konfirmasi Password</label>
+                <!-- Konfirmasi Password -->
+                <div class="mb-4">
+                    <label class="block text-lg mb-1">
+                        Konfirmasi Password
+                    </label>
 
-                    <input type="password"
-                           name="password_confirmation"
-                           class="w-full rounded-full border-gray-300"
-                           required>
+                    <input
+                        type="password"
+                        name="password_confirmation"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3"
+                        required
+                    >
                 </div>
 
-                <button type="submit"
-                        class="w-full border rounded-full py-2 bg-white hover:bg-gray-100">
-                    Daftar
-                </button>
+                <div class="text-center mt-4">
+
+                    Sudah memiliki akun?
+
+                    <a href="{{ route('login') }}"
+                       class="text-blue-600 hover:underline">
+                        Masuk
+                    </a>
+
+                </div>
 
             </form>
+
+        </div>
+
+        <!-- Tombol Daftar -->
+        <div class="flex-1 flex justify-center items-center">
+
+            <button
+                type="submit"
+                form="registerForm"
+                class="border border-gray-500 rounded-full px-36 py-5 text-2xl hover:bg-white transition">
+
+                Daftar
+
+            </button>
 
         </div>
 
@@ -89,4 +195,5 @@
 
 </div>
 
-</x-guest-layout>
+</body>
+</html>
