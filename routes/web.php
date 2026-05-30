@@ -9,51 +9,46 @@ Route::get('/', function () {
 
 // MAHASISWA
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
+
     Route::get('/mahasiswa/dashboard', function () {
-        return view('dashboard'); 
+        return view('dashboard'); // Menampilkan file Figma jika URL ini diakses
     });
+
 });
+
 
 // ADMINISTRASI
 Route::middleware(['auth', 'role:administrasi'])->group(function () {
+
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     });
+
 });
+
 
 // SISTEM
 Route::middleware(['auth', 'role:sistem'])->group(function () {
+
     Route::get('/sistem/dashboard', function () {
         return view('sistem.dashboard');
     });
+
 });
 
-// ==========================================
-// ROUTE UNTUK MENU NAVIGASI ANTRE.in
-// ==========================================
-
-// Beranda / Dashboard Utama (Desain Figma)
+// Dashboard Utama (Desain Figma)
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Menu Monitoring Antrian
-Route::get('/monitoring-antrian', function () {
-    return view('sistem.dashboard'); 
-})->middleware(['auth'])->name('monitoring.antrian');
-
-// Menu Pembayaran
 Route::get('/pembayaran', function () {
-    return view('sistem.pembayaran'); 
+    return view('pembayaran'); // <-- Diubah menjadi 'pembayaran' saja karena filenya di luar folder mahasiswa
 })->middleware(['auth'])->name('pembayaran');
 
-// Menu Administrasi
 Route::get('/administrasi', function () {
-    return view('sistem.administrasi');
+    return view('administrasi');
 })->middleware(['auth'])->name('administrasi');
 
-
-// Profile Route
 Route::middleware('auth')->group(function () {
     /** @slots profile */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
