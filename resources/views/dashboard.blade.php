@@ -42,33 +42,31 @@
                 <!-- KOLOM KIRI & TENGAH (Menu Utama & Info Layanan) -->
                 <div class="lg:col-span-2 space-y-6">
                     
-                    <!-- KARTU MENU 1: PEMBAYARAN -->
-                    <div class="border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-md transition">
-                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <!-- KARTU MENU 1: PEMBAYARAN (Bisa diklik di seluruh kotak) -->
+                    <a href="{{ route('pembayaran') }}" class="block border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-lg hover:border-gray-400 transition bg-white cursor-pointer group">
+                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-gray-100 transition">
                             <!-- Placeholder Gambar Ilustrasi -->
-                            <span class="text-gray-300 text-sm">[ Ilustrasi ]</span>
+                            <span class="text-gray-300 text-sm group-hover:text-gray-400">[ Ilustrasi ]</span>
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-900 mb-1">Pembayaran</h3>
                             <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <!-- href di bawah ini sudah diarahkan ke route pembayaran -->
-                            <a href="{{ route('pembayaran') }}" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
+                            <span class="text-sm font-semibold text-gray-700 underline group-hover:text-black">Lihat Selengkapnya</span>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- KARTU MENU 2: ADMINISTRASI -->
-                    <div class="border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-md transition">
-                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <!-- KARTU MENU 2: ADMINISTRASI (Bisa diklik di seluruh kotak) -->
+                    <a href="{{ route('administrasi') }}" class="block border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-lg hover:border-gray-400 transition bg-white cursor-pointer group">
+                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-gray-100 transition">
                             <!-- Placeholder Gambar Ilustrasi -->
-                            <span class="text-gray-300 text-sm">[ Ilustrasi ]</span>
+                            <span class="text-gray-300 text-sm group-hover:text-gray-400">[ Ilustrasi ]</span>
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-900 mb-1">Administrasi</h3>
                             <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <!-- href di bawah ini sudah diarahkan ke route administrasi -->
-                            <a href="{{ route('administrasi') }}" class="text-sm font-semibold text-gray-700 underline hover:text-black">Lihat Selengkapnya</a>
+                            <span class="text-sm font-semibold text-gray-700 underline group-hover:text-black">Lihat Selengkapnya</span>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- KOTAK INFO LAYANAN -->
                     <div class="border border-gray-200 rounded-2xl p-6">
