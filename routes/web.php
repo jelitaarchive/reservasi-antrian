@@ -41,14 +41,18 @@ Route::get('/administrasi', function () {
     return view('administrasi');
 })->middleware(['auth'])->name('administrasi');
 
-// FIXED: Sudah mengarah ke view 'tambah-antrian'
+// Tambah Antrian
 Route::get('/tambah-antrian', function () {
     return view('tambah-antrian'); 
 })->middleware(['auth'])->name('tambah.antrian');
 
+// PERBAIKAN: Rute Akun Saya / Profil
 Route::middleware('auth')->group(function () {
     /** @slots profile */
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', function () {
+        return view('profil'); // Mengarah ke resources/views/profil.blade.php
+    })->name('profile.edit');
+
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
