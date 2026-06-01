@@ -11,7 +11,8 @@
 
     <div class="flex min-h-screen">
         
-        <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden md:flex">
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-gray-200 border-r border-gray-300 p-6 flex flex-col justify-between hidden md:flex">
             <div>
                 <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10 pl-2">
                     ANTRE.in
@@ -22,7 +23,7 @@
                         <span class="font-medium text-sm">Beranda</span>
                     </a>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('riwayat.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">analytics</span>
                         <span class="font-medium text-sm">Monitoring Antrian</span>
                     </a>
@@ -35,7 +36,7 @@
                         </a>
                     </div>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('riwayat.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">history</span>
                         <span class="font-medium text-sm">Riwayat Antrian</span>
                     </a>
@@ -48,9 +49,11 @@
             </div>
         </aside>
 
+        <!-- MAIN CONTENT -->
         <main class="flex-1 p-8 md:p-12 flex justify-center items-start">
             <div class="w-full max-w-3xl">
                 
+                <!-- HEADER CONTENT -->
                 <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
                     <div class="flex flex-col">
                         <h2 class="text-3xl font-bold text-gray-700 tracking-tight leading-none">Tambah</h2>
@@ -75,6 +78,7 @@
                     </a>
                 </div>
 
+                <!-- PROGRESS BAR STEP -->
                 <div x-show="step < 5" class="flex items-center justify-between gap-3 mb-10 w-full">
                     <div class="w-full h-3 rounded-full border transition-colors duration-300" :class="step >= 1 ? 'bg-blue-500 border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
                     <div class="w-full h-3 rounded-full transition-colors duration-300" :class="step >= 2 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
@@ -82,9 +86,11 @@
                     <div class="w-full h-3 rounded-full transition-colors duration-300" :class="step >= 4 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
                 </div>
 
+                <!-- FORM UTAMA -->
                 <form id="queueForm" action="#" method="POST" enctype="multipart/form-data">
                     @csrf
 
+                    <!-- STEP 1: BIODATA -->
                     <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
                         <p class="text-gray-400 text-xs mt-0.5 mb-8">Lengkapi biodata dibawah ini!</p>
@@ -114,6 +120,7 @@
                         </div>
                     </div>
 
+                    <!-- STEP 2: LAYANAN -->
                     <div x-show="step === 2" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <button type="button" @click="step = 1" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
@@ -147,26 +154,43 @@
                         </div>
                     </div>
 
-                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
+                    <!-- STEP 3: UPLOAD BERKAS -->
+                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" x-data="{ fileName: '' }">
                         <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
                         </button>
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Upload Berkas</h3>
                         <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload berkas yang dibutuhkan</p>
+                        
                         <div class="space-y-6">
                             <div class="flex flex-col items-center justify-center w-full">
-                                <label class="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition">
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <label class="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative">
+                                    
+                                    <!-- Prompt Awal -->
+                                    <div x-show="!fileName" class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
                                         <p class="text-xs font-semibold text-gray-500">Tambahkan File</p>
                                     </div>
-                                    <input type="file" id="berkas" name="berkas" required class="hidden"/>
+
+                                    <!-- Feedback Nama Berkas -->
+                                    <div x-show="fileName" x-cloak class="flex flex-col items-center justify-center p-5 text-center">
+                                        <span class="material-icons-outlined text-green-500 text-4xl mb-2">description</span>
+                                        <p class="text-xs font-bold text-gray-700 truncate max-w-xs" x-text="fileName"></p>
+                                        <p class="text-[10px] text-green-600 mt-1 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 font-medium">Berkas siap diunggah</p>
+                                    </div>
+
+                                    <input type="file" id="berkas" name="berkas" required class="hidden"
+                                        @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" />
                                 </label>
                             </div>
-                            <div class="w-full bg-white border border-gray-300 rounded-full py-2.5 px-6 flex items-center justify-between text-xs font-semibold text-gray-500 shadow-sm">
-                                <span>Upload</span>
-                                <span class="material-icons-outlined text-base">cloud_upload</span>
+
+                            <!-- Status Bar -->
+                            <div class="w-full border rounded-full py-2.5 px-6 flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300"
+                                :class="fileName ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500'">
+                                <span x-text="fileName ? 'Berkas Berhasil Dipilih' : 'Belum Ada Berkas'">Belum Ada Berkas</span>
+                                <span class="material-icons-outlined text-base" x-text="fileName ? 'check_circle' : 'cloud_upload'">cloud_upload</span>
                             </div>
+
                             <div class="pt-8">
                                 <button type="button" @click="if(document.getElementById('berkas').files.length > 0) { step = 4; } else { alert('Silakan tambahkan file berkas terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                     <span>Lanjutkan</span>
@@ -176,6 +200,7 @@
                         </div>
                     </div>
 
+                    <!-- STEP 4: WAKTU LAYANAN -->
                     <div x-show="step === 4" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <button type="button" @click="step = 3" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
@@ -201,6 +226,7 @@
                         </div>
                     </div>
 
+                    <!-- STEP 5: DETAIL NOMOR ANTRIAN (Selesai & Alihkan) -->
                     <div x-show="step === 5" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all flex flex-col items-center">
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
@@ -216,7 +242,8 @@
                             </div>
                         </div>
                         <div class="w-full pt-12">
-                            <a href="#" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                            <!-- Link Diperbarui Ke Route Monitoring/Riwayat Berkas Asli Anda -->
+                            <a href="{{ route('riwayat.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
                                 <span>Monitoring Antrian</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </a>

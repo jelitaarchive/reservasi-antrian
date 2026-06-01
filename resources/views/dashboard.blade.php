@@ -1,139 +1,224 @@
-<x-app-layout>
-    <div class="flex min-h-screen bg-gray-100 font-sans text-gray-800">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - ANTRE.in</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased">
+
+    <div class="flex min-h-screen">
         
-        <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden md:flex">
+        <aside class="w-64 bg-gray-200 border-r border-gray-300 p-6 flex flex-col justify-between hidden md:flex">
             <div>
-                <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10">
+                <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10 pl-2">
                     ANTRE.in
                 </div>
-                
-                <nav class="space-y-4">
-                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 text-gray-900 font-semibold bg-gray-100 p-3 rounded-xl">
-                        <span class="material-icons-outlined text-xl">home</span>
-                        <span>Beranda</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                <nav class="space-y-2">
+                    <div class="relative flex items-center">
+                        <div class="absolute left-[-24px] w-1.5 h-6 bg-black rounded-r-md"></div>
+                        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 text-gray-900 font-bold p-3 w-full">
+                            <span class="material-icons-outlined text-xl text-black">home</span>
+                            <span class="text-sm">Beranda</span>
+                        </a>
+                    </div>
+                    
+                    <a href="{{ route('monitoring.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">analytics</span>
-                        <span>Monitoring Antrian</span>
+                        <span class="font-medium text-sm">Monitoring Antrian</span>
                     </a>
+                    
                     <a href="{{ route('tambah.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">add_box</span>
-                        <span>Tambah Antrian</span>
+                        <span class="font-medium text-sm">Tambah Antrian</span>
                     </a>
-                    <a href="{{ route('antrean.riwayat') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    
+                    <a href="{{ route('riwayat.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">history</span>
-                        <span>Riwayat Antrian</span>
+                        <span class="font-medium text-sm">Riwayat Antrian</span>
                     </a>
+                    
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">person</span>
-                        <span>Akun Saya</span>
+                        <span class="font-medium text-sm">Akun Saya</span>
                     </a>
                 </nav>
             </div>
         </aside>
 
-        <main class="flex-1 p-6 md:p-10 flex justify-center items-start">
-            <div class="w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-100 p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main class="flex-1 p-6 md:p-10 flex justify-center">
+            <div class="w-full max-w-5xl">
                 
-                <div class="lg:col-span-2 space-y-6">
-                    
-                    <a href="{{ route('pembayaran') }}" class="block border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-lg hover:border-gray-400 transition bg-white cursor-pointer group">
-                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-gray-100 transition">
-                            <span class="text-gray-300 text-sm group-hover:text-gray-400">[ Ilustrasi ]</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">Pembayaran</h3>
-                            <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <span class="text-sm font-semibold text-gray-700 underline group-hover:text-black">Lihat Selengkapnya</span>
-                        </div>
-                    </a>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-700 tracking-tight">Beranda</h2>
+                    </div>
 
-                    <a href="{{ route('administrasi') }}" class="block border border-gray-200 rounded-2xl p-6 flex items-start space-x-6 hover:shadow-lg hover:border-gray-400 transition bg-white cursor-pointer group">
-                        <div class="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-gray-100 transition">
-                            <span class="text-gray-300 text-sm group-hover:text-gray-400">[ Ilustrasi ]</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">Administrasi</h3>
-                            <p class="text-gray-500 text-sm leading-relaxed mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
-                            <span class="text-sm font-semibold text-gray-700 underline group-hover:text-black">Lihat Selengkapnya</span>
-                        </div>
-                    </a>
-
-                    <div class="border border-gray-200 rounded-2xl p-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Info Layanan</h3>
-                        <div class="space-y-4 text-sm text-gray-700">
-                            <div>
-                                <h4 class="font-bold text-gray-900">Senin - Jumat</h4>
-                                <div class="flex justify-between border-b border-gray-100 py-1">
-                                    <span>Shift 1</span><span>08.00 - 12.00 WIB</span>
-                                </div>
-                                <div class="flex justify-between py-1">
-                                    <span>Shift 2</span><span>13.30 - 16.00 WIB</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900">Sabtu</h4>
-                                <div class="flex justify-between border-b border-gray-100 py-1">
-                                    <span>Shift 1</span><span>08.00 - 12.00 WIB</span>
-                                </div>
-                                <div class="flex justify-between py-1">
-                                    <span>Shift 2</span><span>13.30 - 15.00 WIB</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between pt-2">
-                                <span class="font-bold text-gray-900">Minggu & Hari Libur Nasional</span>
-                                <span class="text-red-500 font-semibold">Tutup</span>
-                            </div>
+                    <div class="flex-1 max-w-xs mx-0 md:mx-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition shadow-sm">
+                            <span class="material-icons-outlined absolute right-3 top-2.5 text-gray-400 text-sm">search</span>
                         </div>
                     </div>
+
+                    <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 hover:opacity-80 transition group">
+                        <div class="text-right">
+                            <h4 class="font-bold text-gray-800 text-xs leading-tight">{{ Auth::user()->name ?? 'Halo, Mahasiswa' }}</h4>
+                            <p class="text-[10px] text-gray-400">{{ Auth::user()->nim ?? 'ST020230300' }}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 border border-gray-300 group-hover:bg-gray-300 transition">
+                            <span class="material-icons-outlined text-xl">account_circle</span>
+                        </div>
+                    </a>
                 </div>
 
-                <div class="space-y-6">
-                    <a href="{{ route('profile.edit') }}" class="flex items-center justify-between hover:opacity-80 transition group">
-                        <div class="text-right">
-                            <h4 class="font-bold text-gray-900 group-hover:text-blue-600 transition">Halo, {{ Auth::user()->name }}</h4>
-                            <p class="text-xs text-gray-400">STI202303000</p>
-                        </div>
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 group-hover:bg-gray-300 transition border border-gray-300">
-                            <span class="material-icons-outlined">account_circle</span>
-                        </div>
-                    </a>
-
-                    <div class="bg-gray-200 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between h-36 shadow-inner">
-                        <div>
-                            <span class="material-icons-outlined text-gray-600 text-xl">calendar_today</span>
-                        </div>
-                        <div>
-                            <h2 class="text-3xl font-bold text-gray-900">Senin</h2>
-                            <p class="text-sm text-gray-600 font-medium">27 Apr 2026</p>
-                        </div>
-                        <div class="absolute bottom-0 right-2 opacity-20 text-xs">[ Ilustrasi ]</div>
-                    </div>
-
-                    <div class="border border-gray-200 rounded-2xl p-6">
-                        <h4 class="font-bold text-gray-900 mb-4 text-base">Daftar Antrian</h4>
-                        <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
-                            @for ($i = 0; $i < 5; $i++)
-                            <div class="flex items-center space-x-3 py-1 border-b border-gray-50 last:border-none">
-                                <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-                                    <span class="material-icons-outlined text-lg">person</span>
-                                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                    
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <a href="{{ route('pembayaran') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
+                            <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-200 group-hover:bg-blue-50 transition">
+                                <span class="material-icons-outlined text-4xl text-gray-400 group-hover:text-blue-600 transition">payments</span>
+                            </div>
+                            <div class="flex flex-col justify-between h-full py-1">
                                 <div>
-                                    <p class="text-sm font-semibold text-gray-800">User</p>
-                                    <p class="text-xs text-gray-400">Jenis Pelayanan</p>
+                                    <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-blue-600 transition">Pembayaran</h3>
+                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </div>
+                                <div class="mt-4">
+                                    <span class="text-[11px] font-bold text-gray-400 group-hover:text-blue-600 transition underline underline-offset-4">Lihat Selengkapnya</span>
                                 </div>
                             </div>
-                            @endfor
+                        </a>
+
+                        <a href="{{ route('administrasi') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
+                            <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-200 group-hover:bg-blue-50 transition">
+                                <span class="material-icons-outlined text-4xl text-gray-400 group-hover:text-blue-600 transition">gavel</span>
+                            </div>
+                            <div class="flex flex-col justify-between h-full py-1">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-blue-600 transition">Administrasi</h3>
+                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Natoque penatibus et magnis dis parturient montes nascetur. Quis maximus vel velit.</p>
+                                </div>
+                                <div class="mt-4">
+                                    <span class="text-[11px] font-bold text-gray-400 group-hover:text-blue-600 transition underline underline-offset-4">Lihat Selengkapnya</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div class="bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm">
+                            <h3 class="text-base font-bold text-gray-800 mb-4 tracking-tight">Info Layanan</h3>
+                            <div class="space-y-4 text-xs">
+                                <div class="border-b border-gray-100 pb-3">
+                                    <h4 class="font-bold text-gray-700 mb-1">Senin - Jumat</h4>
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Shift 1</span>
+                                        <span class="font-semibold text-gray-600">08.00 - 12.00 WIB</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-400 mt-1">
+                                        <span>Shift 2</span>
+                                        <span class="font-semibold text-gray-600">13.30 - 16.00 WIB</span>
+                                    </div>
+                                </div>
+                                <div class="border-b border-gray-100 pb-3">
+                                    <h4 class="font-bold text-gray-700 mb-1">Sabtu</h4>
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Shift 1</span>
+                                        <span class="font-semibold text-gray-600">08.00 - 12.00 WIB</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-400 mt-1">
+                                        <span>Shift 2</span>
+                                        <span class="font-semibold text-gray-600">13.30 - 15.00 WIB</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-700 mb-1">Minggu & Hari Libur Nasional</h4>
+                                    <div class="flex justify-between text-gray-400">
+                                        <span>Tutup</span>
+                                        <span class="font-semibold text-gray-600">Tutup</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-4 text-center">
-                            <a href="#" class="text-xs font-semibold text-gray-500 underline hover:text-black">Lihat Selengkapnya</a>
-                        </div>
+
                     </div>
+
+                    <div class="space-y-6">
+                        
+                        <div class="bg-gray-200 border border-gray-300 rounded-[28px] p-6 text-center shadow-sm flex flex-col items-center justify-center min-h-[140px]">
+                            <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Senin</h3>
+                            <p class="text-xs font-semibold text-gray-500 tracking-wide mt-1">27 Apr 2026</p>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm">
+                            <h3 class="text-sm font-bold text-gray-800 mb-4 tracking-tight">Daftar Antrian</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                                    <div class="flex items-center space-x-2.5">
+                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                                            <span class="material-icons-outlined text-sm">account_circle</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
+                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                                    <div class="flex items-center space-x-2.5">
+                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                                            <span class="material-icons-outlined text-sm">account_circle</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
+                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                                    <div class="flex items-center space-x-2.5">
+                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                                            <span class="material-icons-outlined text-sm">account_circle</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
+                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2.5">
+                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                                            <span class="material-icons-outlined text-sm">account_circle</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
+                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-2">
+                                <a href="{{ route('monitoring.antrian') }}" class="w-full py-2 border border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-gray-800 font-bold text-[10px] rounded-full transition flex items-center justify-center shadow-sm">
+                                    Lihat Selengkapnya
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
         </main>
     </div>
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-</x-app-layout>
+</body>
+</html>

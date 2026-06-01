@@ -2,7 +2,7 @@
     <div class="flex min-h-screen bg-gray-100 font-sans text-gray-800">
         
         <!-- SIDEBAR KIRI -->
-        <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden md:flex">
+        <aside class="w-64 bg-gray-200 border-r border-gray-300 p-6 flex flex-col justify-between hidden md:flex">
             <div>
                 <div class="text-2xl font-bold tracking-wider text-gray-900 mb-10">
                     ANTRE.in

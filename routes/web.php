@@ -4,10 +4,14 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QueueHistoryController;
 
-
+// Halaman Utama / Landing Page
 Route::get('/', function () {
     return view('welcome');
 });
+
+// ==========================================
+// GRUP AKSES BERDASARKAN ROLE (MIDDLEWARE)
+// ==========================================
 
 // MAHASISWA
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
@@ -30,37 +34,47 @@ Route::middleware(['auth', 'role:sistem'])->group(function () {
     });
 });
 
-// Dashboard Utama
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/pembayaran', function () {
-    return view('pembayaran');
-})->middleware(['auth'])->name('pembayaran');
+// ==========================================
+// GRUP AKSES UMUM (YANG PENTING SUDAH LOGIN)
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    
+    // Dashboard Utama
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::get('/administrasi', function () {
-    return view('administrasi');
-})->middleware(['auth'])->name('administrasi');
+    // Halaman Alur Beranda Layanan
+    Route::get('/pembayaran', function () {
+        return view('pembayaran');
+    })->name('pembayaran');
 
-// Tambah Antrian
-Route::get('/tambah-antrian', function () {
-    return view('tambah-antrian'); 
-})->middleware(['auth'])->name('tambah.antrian');
+    Route::get('/administrasi', function () {
+        return view('administrasi');
+    })->name('administrasi');
 
-// PERBAIKAN: Rute Akun Saya / Profil
-Route::middleware('auth')->group(function () {
-    /** @slots profile */
+    // Fitur Tambah Antrian
+    Route::get('/tambah-antrian', function () {
+        return view('tambah-antrian'); 
+    })->name('tambah.antrian');
+
+    // Fitur Monitoring Antrian (Halaman Baru)
+    Route::get('/monitoring', function () {
+        return view('monitoring');
+    })->name('monitoring.antrian');
+
+    // Fitur Riwayat Antrian (Disinkronkan ke name: riwayat.antrian)
+    Route::get('/riwayat-antrian', [QueueHistoryController::class, 'index'])->name('riwayat.antrian');
+
+    // Manajemen Akun / Profil Saya
     Route::get('/profile', function () {
         return view('profil'); // Mengarah ke resources/views/profil.blade.php
     })->name('profile.edit');
 
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-// Jalur akses untuk melihat halaman Riwayat Antrian
-Route::get('/riwayat-antrian', [QueueHistoryController::class, 'index'])->name('antrean.riwayat');
-
 });
 
+// Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)
 require __DIR__.'/auth.php';

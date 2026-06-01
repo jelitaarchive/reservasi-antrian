@@ -62,40 +62,57 @@
             <button class="bg-white border border-gray-300 text-gray-500 px-10 py-3 rounded-full text-lg font-medium hover:bg-gray-50 transition">Tentang</button>
         </div>
 
+        @if (session('status') === 'profile-updated')
+            <div class="mb-6 max-w-5xl bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-full font-medium shadow-sm">
+                Profil berhasil diperbarui!
+            </div>
+        @endif
+
         <div class="bg-white rounded-[40px] p-12 shadow-sm max-w-5xl">
-            <form method="post" action="{{ route('profile.update') }}" class="space-y-6">
+            <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('patch')
 
                 <div class="flex items-start space-x-12">
                     <div class="relative">
-                        <div class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border-4 border-gray-100 shadow-inner">
-                            <i class="fa-solid fa-user text-6xl text-gray-400"></i>
+                        <div id="avatar-preview" class="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border-4 border-gray-100 shadow-inner">
+                            @if($user->avatar)
+                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Profil" class="w-full h-full object-cover">
+                            @else
+                                <i class="fa-solid fa-user text-6xl text-gray-400"></i>
+                            @endif
                         </div>
-                        <button type="button" class="absolute bottom-0 right-0 bg-gray-600 text-white w-10 h-10 rounded-full border-4 border-white flex items-center justify-center hover:bg-black transition">
+                        
+                        <label for="avatar-input" class="absolute bottom-0 right-0 bg-gray-600 text-white w-10 h-10 rounded-full border-4 border-white flex items-center justify-center hover:bg-black transition cursor-pointer shadow">
                             <i class="fa-solid fa-camera text-sm"></i>
-                        </button>
+                        </label>
+                        
+                        <input type="file" id="avatar-input" name="avatar" class="hidden" accept="image/*" onchange="previewImage(this)">
                     </div>
 
                     <div class="flex-1 space-y-6">
                         <div>
                             <label class="block text-gray-600 text-lg font-medium mb-1 pl-2">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full px-6 py-4 rounded-full border border-gray-300 bg-[#F9FAFB] focus:ring-2 focus:ring-gray-400 outline-none text-lg">
+                            @error('name') <span class="text-red-500 text-sm ml-2">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label class="block text-gray-600 text-lg font-medium mb-1 pl-2">NIM</label>
                             <input type="text" name="nim" value="{{ old('nim', $user->nim) }}" class="w-full px-6 py-4 rounded-full border border-gray-300 bg-[#F9FAFB] focus:ring-2 focus:ring-gray-400 outline-none text-lg">
+                            @error('nim') <span class="text-red-500 text-sm ml-2">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label class="block text-gray-600 text-lg font-medium mb-1 pl-2">Email</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full px-6 py-4 rounded-full border border-gray-300 bg-[#F9FAFB] focus:ring-2 focus:ring-gray-400 outline-none text-lg">
+                            @error('email') <span class="text-red-500 text-sm ml-2">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label class="block text-gray-600 text-lg font-medium mb-1 pl-2">Nomor WhatsApp</label>
                             <input type="text" name="whatsapp" value="{{ old('whatsapp', $user->whatsapp) }}" class="w-full px-6 py-4 rounded-full border border-gray-300 bg-[#F9FAFB] focus:ring-2 focus:ring-gray-400 outline-none text-lg">
+                            @error('whatsapp') <span class="text-red-500 text-sm ml-2">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
@@ -109,5 +126,18 @@
         </div>
     </main>
 
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var previewContainer = document.getElementById('avatar-preview');
+                    // Mengubah isi kontainer gambar dengan tag img preview baru
+                    previewContainer.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>
