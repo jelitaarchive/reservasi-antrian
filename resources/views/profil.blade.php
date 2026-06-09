@@ -153,13 +153,15 @@
 
                     <div x-show="tab === 'preferensi'" x-cloak class="transition-all">
                         <div class="border border-gray-300 rounded-[24px] p-6 text-xs text-gray-500 leading-relaxed space-y-4">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut volutpat vehicula accumsan. Nullam euismod placerat dui sed hendrerit. Maecenas vel purus mollis, fermentum nisi et, dictum quam.</p>
+                            <p>Bagian Preferensi dirancang untuk memberikan kendali penuh kepada pengguna dalam menyesuaikan pengalaman mereka saat menggunakan ANTRE.in.</p>
+                            <p>Di sini, pengguna dapat mengatur preferensi notifikasi, seperti memilih untuk menerima pembaruan status antrian secara <em>real-time</em> melalui WhatsApp atau email, guna memastikan mereka tidak melewatkan giliran layanan. Selain itu, pengguna dapat melakukan pengaturan antarmuka, seperti memilih mode tampilan dan menyesuaikan zona waktu layanan agar sistem antrian menjadi lebih personal dan efisien.</p>
                         </div>
                     </div>
 
                     <div x-show="tab === 'tentang'" x-cloak class="transition-all">
                         <div class="border border-gray-300 rounded-[24px] p-6 text-xs text-gray-500 leading-relaxed space-y-4">
-                            <p>Cras porttitor pulvinar mauris eu varius. Nullam quis pellentesque ante. Morbi iaculis sollicitudin nisl vel tincidunt. Nunc nec ante tincidunt, faucibus eros in, fringilla sem.</p>
+                            <p>Halaman Tentang memberikan gambaran mendalam mengenai visi dan integritas di balik pengembangan ANTRE.in.</p>
+                            <p>Aplikasi ini diciptakan untuk mempermudah proses administrasi kampus agar lebih teratur dan transparan. Bagian ini memuat informasi mengenai versi aplikasi saat ini, kebijakan privasi, serta ketentuan layanan yang menjamin keamanan data pribadi mahasiswa. Kami berkomitmen untuk terus berinovasi guna menghadirkan solusi digital yang solutif bagi seluruh komunitas akademik.</p>
                         </div>
                     </div>
 
