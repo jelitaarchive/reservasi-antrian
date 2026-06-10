@@ -191,41 +191,88 @@
                         </div>
                     </div>
 
-                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" x-data="{ fileName: '' }">
+                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" 
+                         x-data="{ 
+                            fileList: [], // Menampung objek file asli beserta namanya
+                            handleFiles(event) {
+                                const selectedFiles = Array.from(event.target.files);
+                                
+                                // 1. Validasi ekstensi harus PDF
+                                const nonPdf = selectedFiles.some(file => !file.name.toLowerCase().endsWith('.pdf'));
+                                if (nonPdf) {
+                                    alert('Format file tidak didukung! Seluruh berkas harus bertipe ekstensi .pdf');
+                                    event.target.value = ''; 
+                                    return;
+                                }
+
+                                // 2. Gabungkan file baru ke fileList (Bisa upload berkali-kali tanpa hilang)
+                                selectedFiles.forEach(file => {
+                                    // Cek biar tidak ada file dengan nama kembar yang masuk
+                                    if (!this.fileList.some(f => f.name === file.name)) {
+                                        this.fileList.push(file);
+                                    }
+                                });
+
+                                // 3. Sinkronisasikan file ke input asli
+                                this.syncFilesToInput();
+                            },
+                            removeFile(index) {
+                                // Hapus file berdasarkan index
+                                this.fileList.splice(index, 1);
+                                this.syncFilesToInput();
+                            },
+                            syncFilesToInput() {
+                                // Menggunakan DataTransfer API agar file di array masuk ke input file HTML
+                                const dataTransfer = new DataTransfer();
+                                this.fileList.forEach(file => dataTransfer.items.add(file));
+                                document.getElementById('berkas').files = dataTransfer.files;
+                            }
+                         }">
                         <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
                         </button>
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Upload Berkas</h3>
-                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload berkas yang dibutuhkan</p>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload satu atau beberapa berkas dokumen pendukung (Format wajib .pdf)</p>
                         
                         <div class="space-y-6">
                             <div class="flex flex-col items-center justify-center w-full">
-                                <label class="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative">
+                                <label class="flex flex-col items-center justify-center w-full min-h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative p-5">
                                     
-                                    <div x-show="!fileName" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
-                                        <p class="text-xs font-semibold text-gray-500">Tambahkan File</p>
+                                        <p class="text-xs font-semibold text-gray-500">Tambahkan Berkas Dokumen</p>
+                                        <p class="text-[10px] text-gray-400 mt-1">Klik lagi untuk menambah file .pdf lainnya</p>
                                     </div>
 
-                                    <div x-show="fileName" x-cloak class="flex flex-col items-center justify-center p-5 text-center">
-                                        <span class="material-icons-outlined text-green-500 text-4xl mb-2">description</span>
-                                        <p class="text-xs font-bold text-gray-700 truncate max-w-xs" x-text="fileName"></p>
-                                        <p class="text-[10px] text-green-600 mt-1 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 font-medium">Berkas siap diunggah</p>
-                                    </div>
-
-                                    <input type="file" id="berkas" name="berkas" required class="hidden"
-                                        @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" />
+                                    <input type="file" id="berkas" name="berkas[]" required multiple accept=".pdf" class="hidden" @change="handleFiles($event)" />
                                 </label>
                             </div>
 
+                            <div x-show="fileList.length > 0" x-cloak class="w-full space-y-2 max-h-48 overflow-y-auto">
+                                <template x-for="(file, index) in fileList" :key="index">
+                                    <div class="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl p-3 text-left">
+                                        <div class="flex items-center space-x-2 truncate max-w-[80%]">
+                                            <span class="material-icons-outlined text-green-500 text-xl flex-shrink-0">description</span>
+                                            <p class="text-xs font-bold text-gray-700 truncate" x-text="file.name"></p>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-[9px] text-green-600 bg-green-100/80 px-2 py-0.5 rounded-full font-semibold flex-shrink-0">PDF</span>
+                                            <button type="button" @click.prevent="removeFile(index)" class="text-gray-400 hover:text-red-500 transition flex items-center">
+                                                <span class="material-icons-outlined text-sm">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
                             <div class="w-full border rounded-full py-2.5 px-6 flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300"
-                                :class="fileName ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500'">
-                                <span x-text="fileName ? 'Berkas Berhasil Dipilih' : 'Belum Ada Berkas'">Belum Ada Berkas</span>
-                                <span class="material-icons-outlined text-base" x-text="fileName ? 'check_circle' : 'cloud_upload'">cloud_upload</span>
+                                :class="fileList.length > 0 ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500'">
+                                <span x-text="fileList.length > 0 ? fileList.length + ' Berkas Berhasil Dipilih' : 'Belum Ada Berkas'">Belum Ada Berkas</span>
+                                <span class="material-icons-outlined text-base" x-text="fileList.length > 0 ? 'check_circle' : 'cloud_upload'">cloud_upload</span>
                             </div>
 
                             <div class="pt-8">
-                                <button type="button" @click="if(document.getElementById('berkas').files.length > 0) { step = 4; } else { alert('Silakan tambahkan file berkas terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                <button type="button" @click="if(fileList.length > 0) { step = 4; } else { alert('Silakan tambahkan file berkas .pdf terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                     <span>Lanjutkan</span>
                                     <span class="material-icons-outlined text-sm">arrow_forward</span>
                                 </button>
