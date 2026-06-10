@@ -152,45 +152,50 @@
                         </div>
                     </div>
 
-                    <!-- STEP 3: UPLOAD BERKAS -->
-                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" x-data="{ fileName: '' }">
+                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" 
+                        x-data="{ fileList: [] }">
+                        
                         <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
                         </button>
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Upload Berkas</h3>
-                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload berkas yang dibutuhkan</p>
+                        <p class="text-gray-400 text-xs mt-0.5 mb-8">Upload berkas yang dibutuhkan (bisa pilih banyak)</p>
                         
                         <div class="space-y-6">
                             <div class="flex flex-col items-center justify-center w-full">
                                 <label class="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative">
                                     
-                                    <!-- Prompt Awal -->
-                                    <div x-show="!fileName" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <div x-show="fileList.length === 0" class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
                                         <p class="text-xs font-semibold text-gray-500">Tambahkan File</p>
                                     </div>
 
-                                    <!-- Feedback Nama Berkas -->
-                                    <div x-show="fileName" x-cloak class="flex flex-col items-center justify-center p-5 text-center">
-                                        <span class="material-icons-outlined text-green-500 text-4xl mb-2">description</span>
-                                        <p class="text-xs font-bold text-gray-700 truncate max-w-xs" x-text="fileName"></p>
-                                        <p class="text-[10px] text-green-600 mt-1 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 font-medium">Berkas siap diunggah</p>
+                                    <div x-show="fileList.length > 0" x-cloak class="w-full px-4 text-center overflow-y-auto max-h-32">
+                                        <p class="text-[10px] font-bold text-gray-500 mb-2">Daftar Berkas Anda:</p>
+                                        <template x-for="(file, index) in fileList" :key="index">
+                                            <div class="flex items-center justify-center space-x-2 py-0.5">
+                                                <span class="material-icons-outlined text-green-500 text-[10px]">check_circle</span>
+                                                <p class="text-[10px] font-medium text-gray-700 truncate" x-text="file.name"></p>
+                                            </div>
+                                        </template>
                                     </div>
 
-                                    <input type="file" id="berkas" name="berkas" required class="hidden"
-                                        @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" />
+                                    <input type="file" id="berkas" name="berkas[]" multiple required class="hidden"
+                                        @change="fileList = Array.from($event.target.files)" />
                                 </label>
                             </div>
 
-                            <!-- Status Bar -->
                             <div class="w-full border rounded-full py-2.5 px-6 flex items-center justify-between text-xs font-semibold shadow-sm transition-all duration-300"
-                                :class="fileName ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500'">
-                                <span x-text="fileName ? 'Berkas Berhasil Dipilih' : 'Belum Ada Berkas'">Belum Ada Berkas</span>
-                                <span class="material-icons-outlined text-base" x-text="fileName ? 'check_circle' : 'cloud_upload'">cloud_upload</span>
+                                :class="fileList.length > 0 ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500'">
+                                
+                                <span x-text="fileList.length > 0 ? fileList.length + ' Berkas telah dipilih' : 'Belum Ada Berkas'"></span>
+                                <span class="material-icons-outlined text-base" x-text="fileList.length > 0 ? 'cloud_done' : 'cloud_upload'"></span>
                             </div>
 
                             <div class="pt-8">
-                                <button type="button" @click="if(document.getElementById('berkas').files.length > 0) { step = 4; } else { alert('Silakan tambahkan file berkas terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                <button type="button" 
+                                    @click="if(fileList.length > 0) { step = 4; } else { alert('Silakan pilih berkas terlebih dahulu!'); }" 
+                                    class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                     <span>Lanjutkan</span>
                                     <span class="material-icons-outlined text-sm">arrow_forward</span>
                                 </button>
