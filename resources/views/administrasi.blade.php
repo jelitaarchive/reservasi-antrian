@@ -72,15 +72,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pengajuan Skripsi/TA</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Proses administrasi awal pendaftaran tugas akhir bagi mahasiswa tingkat akhir yang telah memenuhi syarat SKS.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Transkrip nilai terbaru yang telah disahkan.</li>
+                                <li>Lembar persetujuan judul dari dosen pembimbing.</li>
+                                <li>Bukti lunas pembayaran biaya pendidikan.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -92,15 +92,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pendaftaran Magang dan PKL</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Pengurusan surat pengantar resmi dari fakultas/universitas untuk keperluan magang di perusahaan atau instansi terkait.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Surat permohonan magang dari mahasiswa.</li>
+                                <li>Proposal rencana kegiatan magang.</li>
+                                <li>Kartu Tanda Mahasiswa (KTM) yang masih berlaku.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -112,15 +112,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Surat Keterangan Aktif Kuliah</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Layanan penerbitan surat keterangan resmi yang menyatakan bahwa mahasiswa tersebut sedang aktif menempuh studi di universitas.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Fotokopi KTM.</li>
+                                <li>Bukti pembayaran UKT semester berjalan.</li>
+                                <li>Formulir permohonan surat keterangan.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -132,15 +132,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Penggantian KTM</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Layanan untuk penggantian Kartu Tanda Mahasiswa yang hilang atau rusak agar dapat digunakan kembali sebagai akses fasilitas kampus.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Surat kehilangan dari kepolisian (untuk kasus hilang).</li>
+                                <li>KTM yang rusak (untuk kasus rusak).</li>
+                                <li>Pas foto terbaru ukuran 3x4.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -152,15 +152,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pengajuan Cuti Kuliah</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Prosedur resmi bagi mahasiswa yang berencana untuk menangguhkan masa studinya untuk periode semester tertentu.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Surat permohonan cuti bermaterai.</li>
+                                <li>Surat izin atau rekomendasi dari orang tua/wali.</li>
+                                <li>Transkrip nilai sebagai bahan pertimbangan akademik.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>

@@ -85,7 +85,7 @@
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-blue-600 transition">Pembayaran</h3>
-                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Layanan ini dikhususkan untuk memproses segala bentuk pembayaran akademik, termasuk pembayaran UKT, biaya SKS, atau biaya administrasi lainnya. Pastikan Anda menyiapkan bukti tagihan dan dokumen pendukung agar proses verifikasi di loket berjalan lebih cepat.</p>
                                 </div>
                                 <div class="mt-4">
                                     <span class="text-[11px] font-bold text-gray-400 group-hover:text-blue-600 transition underline underline-offset-4">Lihat Selengkapnya</span>
@@ -100,7 +100,7 @@
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-800 leading-tight group-hover:text-blue-600 transition">Administrasi</h3>
-                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Natoque penatibus et magnis dis parturient montes nascetur. Quis maximus vel velit.</p>
+                                    <p class="text-xs text-gray-400 mt-1 max-w-sm">Layanan ini menangani kebutuhan administrasi kemahasiswaan, seperti pengurusan kartu mahasiswa, surat keterangan aktif kuliah, legalisir dokumen, serta konsultasi data akademik. Silakan pilih layanan ini untuk pengurusan dokumen resmi kampus.</p>
                                 </div>
                                 <div class="mt-4">
                                     <span class="text-[11px] font-bold text-gray-400 group-hover:text-blue-600 transition underline underline-offset-4">Lihat Selengkapnya</span>

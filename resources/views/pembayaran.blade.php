@@ -71,15 +71,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pembayaran UKT</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Pembayaran biaya operasional pendidikan rutin setiap semester.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Kartu Rencana Studi (KRS) semester berjalan.</li>
+                                <li>Tagihan resmi dari sistem informasi akademik.</li>
+                                <li>Bukti bayar (jika ada kendala transaksi).</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -91,15 +91,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pembayaran KKL</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros, maximus et maximus quis, malesuada eu velit.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Pembayaran dana kegiatan Kuliah Kerja Lapangan untuk kebutuhan transportasi, akomodasi, dan program kerja lapangan.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Lembar persetujuan mengikuti KKL.</li>
+                                <li>Slip pembayaran dari pihak panitia/jurusan.</li>
+                                <li>Kartu Tanda Mahasiswa (KTM) aktif.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -111,15 +111,15 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pengajuan Keringanan UKT</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Layanan bagi mahasiswa yang mengajukan permohonan penyesuaian/angsuran biaya pendidikan karena kondisi ekonomi atau kendala tertentu.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Surat permohonan keringanan bermaterai.</li>
+                                <li>Surat keterangan penghasilan orang tua/wali.</li>
+                                <li>Kartu Keluarga (KK) dan dokumen pendukung lainnya.</li>
                             </ol>
                             <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
@@ -131,20 +131,17 @@
                             <div class="w-20 h-20 bg-gray-400 rounded-full flex-shrink-0"></div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">Pembayaran Non-Akademik</h3>
-                                <p class="text-gray-400 text-xs leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque eros.</p>
+                                <p class="text-gray-400 text-xs leading-relaxed">Pembayaran layanan di luar akademik seperti denda perpustakaan, biaya sewa fasilitas kampus, atau biaya sertifikasi.</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-100 pt-4">
                             <p class="text-xs font-bold text-gray-800 mb-2">Berkas persyaratan:</p>
                             <ol class="text-xs text-gray-500 list-decimal pl-4 space-y-1 mb-4">
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
-                                <li>Lorem ipsum dolor sit amet</li>
+                                <li>Surat keterangan denda/biaya dari unit terkait.</li>
+                                <li>Identitas diri (KTM/KTP).</li>
+                                <li>Slip pembayaran atau kode billing dari sistem.</li>
                             </ol>
-                            <div class="flex justify-between items-center">
-                                <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
-                                <span class="material-icons-outlined text-gray-400 text-lg">photo_camera</span>
-                            </div>
+                            
                         </div>
                     </div>
 
