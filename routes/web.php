@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\QueueHistoryController;
 use App\Http\Controllers\AntreanController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdministrasiController;
 
@@ -81,7 +83,39 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/antrian/store', [AntreanController::class, 'store'])->name('antrian.store');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'showOtpForm'])->name('password.otp.form');
+    Route::post('/forgot-password/reset-with-otp', [PasswordResetLinkController::class, 'resetPasswordWithOtp'])->name('password.otp.reset');
 
+});
+
+Route::get('/test-wa', function () {
+    // 1. Ambil token dari .env
+    $token = env('FONNTE_TOKEN'); 
+    
+    // 2. GANTI dengan nomor WhatsApp HP kamu sendiri buat test (awali dengan 62 atau 08)
+    $nomorHP = '628xxxxxxxxxx'; 
+    
+    $pesan = "🔥 *TESTING SUCCESS!* 🔥\n\nHalo Bubb, kalau chat ini masuk, berarti API WhatsApp kamu di Laravel udah sukses terkoneksi 100%! Siap lanjut ngoding fitur reminder antrian. 😎🚀";
+
+    // 3. Tembak API Fonnte
+    try {
+        $response = Http::withHeaders([
+            'Authorization' => $token
+        ])->post('https://api.fonnte.com/send', [
+            'target' => $nomorHP,
+            'message' => $pesan,
+            'countryCode' => '62',
+        ]);
+
+        // Tampilkan hasil response di browser buat ngecek statusnya
+        return response()->json([
+            'info' => 'Request dikirim, cek hasilnya dibawah:',
+            'response_dari_fonnte' => $response->json()
+        ]);
+
+    } catch (\Exception $e) {
+        return 'Waduh error bubb: ' . $e->getMessage();
+    }
 });
 
 // Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)
