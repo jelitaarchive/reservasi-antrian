@@ -148,8 +148,8 @@
                     <div class="space-y-6">
                         
                         <div class="bg-gray-200 border border-gray-300 rounded-[28px] p-6 text-center shadow-sm flex flex-col items-center justify-center min-h-[140px]">
-                            <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Senin</h3>
-                            <p class="text-xs font-semibold text-gray-500 tracking-wide mt-1">27 Apr 2026</p>
+                            <h3 id="realtime-day" class="text-2xl font-bold text-gray-800 tracking-tight">Menghitung...</h3>
+                            <p id="realtime-date" class="text-xs font-semibold text-gray-500 tracking-wide mt-1">...</p>
                         </div>
 
                         <div class="bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm">
@@ -220,5 +220,26 @@
         </main>
     </div>
 
+    <script>
+        function updateCalendar() {
+            const now = new Date();
+            
+            // Array nama hari dan bulan dalam bahasa Indonesia
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            const dayName = days[now.getDay()];
+            const dateNum = now.getDate();
+            const monthName = months[now.getMonth()];
+            const yearNum = now.getFullYear();
+            
+            // Render ke elemen HTML
+            document.getElementById('realtime-day').textContent = dayName;
+            document.getElementById('realtime-date').textContent = `${dateNum} ${monthName} ${yearNum}`;
+        }
+
+        // Jalankan saat halaman di-load
+        document.addEventListener('DOMContentLoaded', updateCalendar);
+    </script>
 </body>
 </html>
