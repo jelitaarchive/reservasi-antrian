@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\QueueHistoryController;
 use App\Http\Controllers\AntreanController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdministrasiController;
 
@@ -81,8 +83,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/antrian/store', [AntreanController::class, 'store'])->name('antrian.store');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
+    // 1. Halaman minta link / input email reset (Halaman pertama)
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+
+    // 2. Tampilkan halaman form input OTP figma kamu ini
+    Route::get('/forgot-password/otp', [PasswordResetLinkController::class, 'showOtpForm'])->name('password.otp.form');
+
+    // 3. Proses verifikasi OTP saat tombol "Verifikasi Kode" diklik
+    Route::post('/forgot-password/verify-otp', [PasswordResetLinkController::class, 'resetPasswordWithOtp'])->name('password.verify_otp');
 
 });
+
 
 // Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)
 require __DIR__.'/auth.php';
