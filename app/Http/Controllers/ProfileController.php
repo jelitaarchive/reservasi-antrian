@@ -29,14 +29,20 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         
-        // Mengisi data text yang tervalidasi dari Form (Nama, NIM, Email, WhatsApp)
+        // Mengisi data text yang tervalidasi dari Form standar (Nama, NIM, Email)
         $user->fill($request->validated());
+
+        // PERBAIKAN: Ambil langsung input whatsapp dari request & lakukan validasi manual di sini
+        $request->validate([
+            'whatsapp' => ['nullable', 'string', 'max:20'],
+        ]);
+        $user->whatsapp = $request->input('whatsapp');
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // LOGIKA BARU: Proses Unggah Foto Profil / Avatar
+        // PROSES UNGGAH FOTO PROFIL / AVATAR
         if ($request->hasFile('avatar')) {
             // Validasi format file foto terlebih dahulu secara instan
             $request->validate([

@@ -57,8 +57,12 @@
                             <h4 class="font-bold text-gray-900 text-sm">Halo, {{ Auth::user()->name }}</h4>
                             <p class="text-xs text-gray-400">STI202303000</p>
                         </div>
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex-items-center justify-center text-gray-600">
-                            <span class="material-icons-outlined">account_circle</span>
+                        <div class="w-8 h-8 bg-gray-100 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Foto Profil" class="w-full h-full object-cover">
+                            @else
+                                <span class="material-icons-outlined text-xl text-gray-400">account_circle</span>
+                            @endif
                         </div>
                     </div>
                 </div>

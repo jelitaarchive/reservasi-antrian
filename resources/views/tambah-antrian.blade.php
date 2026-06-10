@@ -72,8 +72,12 @@
                             <h4 class="font-bold text-gray-800 text-xs leading-tight group-hover:text-blue-600 transition">Halo, {{ Auth::user()->name ?? 'Jelita Admin' }}</h4>
                             <p class="text-[10px] text-gray-400">{{ Auth::user()->nim ?? '220101001' }}</p>
                         </div>
-                        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 border border-gray-300 group-hover:bg-gray-300 transition">
-                            <span class="material-icons-outlined text-xl">account_circle</span>
+                        <div class="w-8 h-8 bg-gray-100 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Foto Profil" class="w-full h-full object-cover">
+                            @else
+                                <span class="material-icons-outlined text-xl text-gray-400">account_circle</span>
+                            @endif
                         </div>
                     </a>
                 </div>
