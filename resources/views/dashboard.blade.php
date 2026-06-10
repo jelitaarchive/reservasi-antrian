@@ -56,12 +56,6 @@
                         <h2 class="text-3xl font-bold text-gray-700 tracking-tight">Beranda</h2>
                     </div>
 
-                    <div class="flex-1 max-w-xs mx-0 md:mx-4">
-                        <div class="relative">
-                            <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition shadow-sm">
-                            <span class="material-icons-outlined absolute right-3 top-2.5 text-gray-400 text-sm">search</span>
-                        </div>
-                    </div>
 
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 hover:opacity-80 transition group">
                         <div class="text-right">
@@ -73,7 +67,6 @@
                         </div>
                     </a>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
                     <div class="lg:col-span-2 space-y-6">

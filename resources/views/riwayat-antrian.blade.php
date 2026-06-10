@@ -59,8 +59,8 @@
 
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 hover:opacity-80 transition group">
                         <div class="text-right">
-                            <h4 class="font-bold text-gray-800 text-xs leading-tight">{{ Auth::user()->name ?? 'Jelita Admin' }}</h4>
-                            <p class="text-[10px] text-gray-400">{{ Auth::user()->nim ?? '220101001' }}</p>
+                            <h4 class="font-bold text-gray-800 text-xs leading-tight">{{ Auth::user()->name ?? 'Halo, Mahasiswa' }}</h4>
+                            <p class="text-[10px] text-gray-400">{{ Auth::user()->nim ?? 'ST020230300' }}</p>
                         </div>
                         <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 border border-gray-300 group-hover:bg-gray-300 transition">
                             <span class="material-icons-outlined text-xl">account_circle</span>

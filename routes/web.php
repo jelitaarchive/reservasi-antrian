@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QueueHistoryController;
+use App\Http\Controllers\AntreanController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdministrasiController;
+
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
@@ -74,6 +78,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/antrian/store', [AntreanController::class, 'store'])->name('antrian.store');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
+
 });
 
 // Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)

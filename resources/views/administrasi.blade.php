@@ -32,6 +32,7 @@
             </div>
         </aside>
 
+        
         <!-- KONTEN UTAMA SUB-MENU ADMINISTRASI -->
         <main class="flex-1 p-6 md:p-10 flex justify-center items-start">
             <div class="w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
@@ -45,12 +46,6 @@
                         <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Beranda</h2>
                     </div>
 
-                    <div class="flex-1 max-w-md mx-0 md:mx-4">
-                        <div class="relative">
-                            <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition">
-                            <span class="material-icons-outlined absolute right-3 top-2.5 text-gray-400 text-sm">search</span>
-                        </div>
-                    </div>
 
                     <div class="flex items-center space-x-3 self-end md:self-auto">
                         <div class="text-right">

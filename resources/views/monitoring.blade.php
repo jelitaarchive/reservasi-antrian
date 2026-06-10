@@ -49,12 +49,7 @@
                     <div>
                         <h2 class="text-2xl font-bold text-gray-700">Monitoring Antrian</h2>
                     </div>
-                    <div class="flex-1 max-w-sm px-6">
-                        <div class="relative">
-                            <input type="text" placeholder="Cari" class="w-full pl-4 pr-10 py-2 bg-transparent border border-gray-400 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-gray-600">
-                            <span class="material-icons-outlined absolute right-3 top-2 text-gray-400">search</span>
-                        </div>
-                    </div>
+                   
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 hover:opacity-80 transition group">
                         <div class="text-right">
                             <h4 class="font-bold text-gray-800 text-xs leading-tight">{{ Auth::user()->name ?? 'Halo, Mahasiswa' }}</h4>
