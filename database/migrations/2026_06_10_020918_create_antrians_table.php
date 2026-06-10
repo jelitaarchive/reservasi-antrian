@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('antrians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nama');
+            $table->string('nim');
+            $table->string('email');
+            $table->string('whatsapp');
             $table->string('jenis_layanan');
-            $table->string('kode_antrian');
-            $table->string('waktu_layanan');
-            $table->string('status')->default('menunggu');
+            $table->string('kategori_layanan');
+            $table->string('waktu_layanan'); // Untuk nyimpan text Shift A / B
+            $table->string('nomor_antrian'); // Contoh: A-01, B-01
+            $table->date('tanggal_antrian'); // Untuk reset urutan setiap berganti hari
             $table->timestamps();
         });
     }

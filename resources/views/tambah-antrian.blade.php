@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
-<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" x-data="{ step: 1, waktu_layanan: '', jenis_layanan: '' }">
+<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" x-data="tambahAntrianForm()">
 
     <div class="flex min-h-screen">
         
@@ -72,7 +72,7 @@
                     </a>
                 </div>
 
-                <div x-show="step < 5" class="flex items-center justify-between gap-3 mb-10 w-full">
+                <div x-show="step < 5" class="flex items-center justify-between gap-3 mb-10 w-full" x-cloak>
                     <div class="w-full h-3 rounded-full border transition-colors duration-300" :class="step >= 1 ? 'bg-blue-500 border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
                     <div class="w-full h-3 rounded-full transition-colors duration-300" :class="step >= 2 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
                     <div class="w-full h-3 rounded-full transition-colors duration-300" :class="step >= 3 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
@@ -145,39 +145,31 @@
                                         <span class="text-xs text-gray-600">Pembayaran UKT</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pembayaran KKL" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pembayaran KKL</span>
+                                        <input type="radio" name="kategori_layanan" value="Biaya SKS" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">Biaya SKS</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pengajuan Keringanan UKT" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pengajuan Keringanan UKT</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pembayaran Non-Akademik" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pembayaran Non-Akademik</span>
+                                        <input type="radio" name="kategori_layanan" value="Biaya Administrasi Lainnya" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">Biaya Administrasi Lainnya</span>
                                     </label>
                                 </div>
 
                                 <div x-show="jenis_layanan === 'Administrasi'" class="space-y-3 pl-1 bg-gray-50/50 border border-gray-200 rounded-[20px] p-5 shadow-sm">
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pengajuan Skripsi/TA" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pengajuan Skripsi/TA</span>
+                                        <input type="radio" name="kategori_layanan" value="Pengurusan Kartu Mahasiswa" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">Pengurusan Kartu Mahasiswa</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pendaftaran Magang dan PKL" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pendaftaran Magang dan PKL</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Surat Keterangan Aktif Kuliah" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="kategori_layanan" value="Surat Keterangan Aktif Kuliah" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600">Surat Keterangan Aktif Kuliah</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Penggantian KTM" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Penggantian KTM</span>
+                                        <input type="radio" name="kategori_layanan" value="Legalisir Dokumen" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">Legalisir Dokumen</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pengajuan Cuti Kuliah" :required="jenis_layanan === 'Administrasi'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600">Pengajuan Cuti Kuliah</span>
+                                        <input type="radio" name="kategori_layanan" value="Konsultasi Data Akademik" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">Konsultasi Data Akademik</span>
                                     </label>
                                 </div>
                             </div>
@@ -191,43 +183,7 @@
                         </div>
                     </div>
 
-                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" 
-                         x-data="{ 
-                            fileList: [], // Menampung objek file asli beserta namanya
-                            handleFiles(event) {
-                                const selectedFiles = Array.from(event.target.files);
-                                
-                                // 1. Validasi ekstensi harus PDF
-                                const nonPdf = selectedFiles.some(file => !file.name.toLowerCase().endsWith('.pdf'));
-                                if (nonPdf) {
-                                    alert('Format file tidak didukung! Seluruh berkas harus bertipe ekstensi .pdf');
-                                    event.target.value = ''; 
-                                    return;
-                                }
-
-                                // 2. Gabungkan file baru ke fileList (Bisa upload berkali-kali tanpa hilang)
-                                selectedFiles.forEach(file => {
-                                    // Cek biar tidak ada file dengan nama kembar yang masuk
-                                    if (!this.fileList.some(f => f.name === file.name)) {
-                                        this.fileList.push(file);
-                                    }
-                                });
-
-                                // 3. Sinkronisasikan file ke input asli
-                                this.syncFilesToInput();
-                            },
-                            removeFile(index) {
-                                // Hapus file berdasarkan index
-                                this.fileList.splice(index, 1);
-                                this.syncFilesToInput();
-                            },
-                            syncFilesToInput() {
-                                // Menggunakan DataTransfer API agar file di array masuk ke input file HTML
-                                const dataTransfer = new DataTransfer();
-                                this.fileList.forEach(file => dataTransfer.items.add(file));
-                                document.getElementById('berkas').files = dataTransfer.files;
-                            }
-                         }">
+                    <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
                             <span class="material-icons-outlined text-xl">arrow_back</span>
                         </button>
@@ -237,18 +193,16 @@
                         <div class="space-y-6">
                             <div class="flex flex-col items-center justify-center w-full">
                                 <label class="flex flex-col items-center justify-center w-full min-h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative p-5">
-                                    
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
                                         <p class="text-xs font-semibold text-gray-500">Tambahkan Berkas Dokumen</p>
                                         <p class="text-[10px] text-gray-400 mt-1">Klik lagi untuk menambah file .pdf lainnya</p>
                                     </div>
-
                                     <input type="file" id="berkas" name="berkas[]" required multiple accept=".pdf" class="hidden" @change="handleFiles($event)" />
                                 </label>
                             </div>
 
-                            <div x-show="fileList.length > 0" x-cloak class="w-full space-y-2 max-h-48 overflow-y-auto">
+                            <div x-show="fileList.length > 0" class="w-full space-y-2 max-h-48 overflow-y-auto" x-cloak>
                                 <template x-for="(file, index) in fileList" :key="index">
                                     <div class="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl p-3 text-left">
                                         <div class="flex items-center space-x-2 truncate max-w-[80%]">
@@ -298,7 +252,7 @@
                         </div>
                         <input type="hidden" name="waktu_layanan" :value="waktu_layanan" required>
                         <div>
-                            <button type="button" @click="if(waktu_layanan !== '') { step = 5; } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                            <button type="button" @click="if(waktu_layanan !== '') { generateQueue(); } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                 <span>Kirim</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </button>
@@ -308,11 +262,17 @@
                     <div x-show="step === 5" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all flex flex-col items-center">
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
-                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none">A-09</div>
+                        
+                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none" x-text="nomor_antrian">A-00</div>
+                        
                         <div class="w-full max-w-md mt-8 space-y-4 text-xs px-4">
                             <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                                 <span class="text-gray-400 font-medium">Jenis Pelayanan</span>
                                 <span class="text-gray-700 font-bold" x-text="jenis_layanan">Pembayaran</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-gray-400 font-medium">Kategori</span>
+                                <span class="text-gray-700 font-bold" x-text="kategori_layanan_text">-</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-400 font-medium">Waktu Pelayanan</span>
@@ -332,5 +292,60 @@
         </main>
     </div>
 
+    <script>
+        function tambahAntrianForm() {
+            return {
+                step: 1,
+                waktu_layanan: '',
+                jenis_layanan: '',
+                nomor_antrian: '',
+                fileList: [],
+                kategori_layanan_text: '-',
+
+                handleFiles(event) {
+                    const selectedFiles = Array.from(event.target.files);
+                    const nonPdf = selectedFiles.some(file => !file.name.toLowerCase().endsWith('.pdf'));
+                    
+                    if (nonPdf) {
+                        alert('Format file tidak didukung! Seluruh berkas harus bertipe ekstensi .pdf');
+                        event.target.value = ''; 
+                        return;
+                    }
+                    
+                    selectedFiles.forEach(file => {
+                        if (!this.fileList.some(f => f.name === file.name)) {
+                            this.fileList.push(file);
+                        }
+                    });
+                    this.syncFilesToInput();
+                },
+
+                removeFile(index) {
+                    this.fileList.splice(index, 1);
+                    this.syncFilesToInput();
+                },
+
+                syncFilesToInput() {
+                    const dataTransfer = new DataTransfer();
+                    this.fileList.forEach(file => dataTransfer.items.add(file));
+                    document.getElementById('berkas').files = dataTransfer.files;
+                },
+
+                generateQueue() {
+                    // Ambil teks kategori yang tercentang sebelum pindah step
+                    const checkedRadio = document.querySelector('input[name="kategori_layanan"]:checked');
+                    this.kategori_layanan_text = checkedRadio ? checkedRadio.value : '-';
+
+                    // Bikin prefix A atau B berdasarkan shift
+                    let prefix = this.waktu_layanan.includes('08.00') ? 'A' : 'B';
+                    let number = Math.floor(Math.random() * 20) + 1;
+                    let formattedNumber = number.toString().padStart(2, '0');
+                    
+                    this.nomor_antrian = prefix + '-' + formattedNumber;
+                    this.step = 5;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
