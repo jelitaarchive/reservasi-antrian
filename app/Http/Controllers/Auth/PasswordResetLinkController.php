@@ -64,9 +64,10 @@ class PasswordResetLinkController extends Controller
     }
 
     // 2. TAMPILKAN HALAMAN INPUT OTP & PASSWORD BARU
-    public function showOtpForm(): View
+    public function showOtpForm(): \Illuminate\View\View
     {
-        return view('auth.verify-otp');
+        // Pastikan memanggil file verify-otp.blade.php milikmu!
+        return view('auth.verify-otp'); 
     }
 
     // 3. PROSES VERIFIKASI OTP & UPDATE PASSWORD
