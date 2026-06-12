@@ -280,7 +280,7 @@
                             </div>
                         </div>
                         <div class="w-full pt-12">
-                            <a href="{{ route('riwayat.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <a href="{{ route('monitoring.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
                                 <span>Monitoring Antrian</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </a>
