@@ -139,7 +139,7 @@
                                 <li>Identitas diri (KTM/KTP).</li>
                                 <li>Slip pembayaran atau kode billing dari sistem.</li>
                             </ol>
-                            
+                            <a href="{{ route('tambah.antrian') }}" class="inline-block w-24 py-2 bg-gray-200 text-gray-800 text-xs font-bold rounded-full hover:bg-gray-300 transition text-center">Antri</a>
                         </div>
                     </div>
 

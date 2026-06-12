@@ -76,8 +76,8 @@
                     <div class="lg:col-span-2 space-y-6">
                         
                         <a href="{{ route('pembayaran') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
-                            <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-200 group-hover:bg-blue-50 transition">
-                                <span class="material-icons-outlined text-4xl text-gray-400 group-hover:text-blue-600 transition">payments</span>
+                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm">
+                                <img src="{{ asset('images/pembayaran.png') }}" class="w-24 h-24 rounded-2xl">
                             </div>
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
@@ -91,8 +91,8 @@
                         </a>
 
                         <a href="{{ route('administrasi') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
-                            <div class="w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-200 group-hover:bg-blue-50 transition">
-                                <span class="material-icons-outlined text-4xl text-gray-400 group-hover:text-blue-600 transition">gavel</span>
+                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm">
+                                <img src="{{ asset('images/administrasi.png') }}" class="w-24 h-24 rounded-2xl">
                             </div>
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
@@ -144,9 +144,17 @@
 
                     <div class="space-y-6">
                         
-                        <div class="bg-gray-200 border border-gray-300 rounded-[28px] p-6 text-center shadow-sm flex flex-col items-center justify-center min-h-[140px]">
-                            <h3 id="realtime-day" class="text-2xl font-bold text-gray-800 tracking-tight">Menghitung...</h3>
-                            <p id="realtime-date" class="text-xs font-semibold text-gray-500 tracking-wide mt-1">...</p>
+                        <div class="bg-gray-200 border border-gray-300 rounded-[28px] p-8 text-center shadow-sm flex flex-col items-center justify-center min-h-[180px] relative overflow-hidden">
+                            <div class="mb-3 text-gray-600">
+                                <span class="material-icons-outlined text-4xl">calendar_today</span>
+                            </div>
+
+                            <div class="relative z-10">
+                                <h3 id="realtime-day" class="text-3xl font-bold text-gray-800 tracking-tight">Menghitung...</h3>
+                                <p id="realtime-date" class="text-sm font-semibold text-gray-500 tracking-wide mt-2">...</p>
+                            </div>
+
+                            <img src="{{ asset('images/kalender.png') }}" class="absolute -bottom-2 -right-2 w-24 opacity-20 pointer-events-none">
                         </div>
 
                         <div class="bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm">
