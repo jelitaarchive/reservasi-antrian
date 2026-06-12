@@ -18,7 +18,7 @@ class PasswordResetLinkController extends Controller
         return view('auth.forgot-password');
     }
 
-    // 1. KIRIM OTP KE WHATSAPP
+    // 1. KIRIM OTP KE WHATSAPP (Berdasarkan Email)
     public function store(Request $request): RedirectResponse
     {
         $request->validate(['email' => ['required', 'email']]);
@@ -36,7 +36,7 @@ class PasswordResetLinkController extends Controller
         // Bikin OTP 6 digit angka
         $otpCode = rand(100000, 999999);
 
-        // Simpan ke tabel token reset (kita simpan mentah/plain dulu biar gampang dicocokkan lewat input)
+        // Simpan ke tabel token reset
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $user->email],
             [
@@ -59,29 +59,45 @@ class PasswordResetLinkController extends Controller
             return back()->withErrors(['email' => 'Gagal mengirim WA, coba lagi nanti.']);
         }
 
-        // Lempar ke halaman input OTP sambil bawa data email via session
-        return redirect()->route('verify_otp')->with(['status' => 'Kode OTP telah dikirim ke WhatsApp!', 'reset_email' => $user->email]);
+        // Lempar ke halaman input OTP sambil simpan email di session agar tidak perlu ngetik email lagi
+        session(['reset_email' => $user->email]);
+
+        return redirect()->route('password.otp')->with('status', 'Kode OTP telah dikirim ke WhatsApp Anda!');
     }
 
     // 2. TAMPILKAN HALAMAN INPUT OTP & PASSWORD BARU
-    public function showOtpForm(): \Illuminate\View\View
+    public function showOtpForm(): View
     {
-        // Pastikan memanggil file verify-otp.blade.php milikmu!
+        // Pastikan session email masih ada, kalau tidak ada balikkan ke halaman input email
+        if (!session('reset_email')) {
+            return redirect()->route('password.request')->withErrors(['email' => 'Sesi habis, silakan masukkan email kembali.']);
+        }
+
         return view('auth.verify-otp'); 
     }
 
-    // 3. PROSES VERIFIKASI OTP & UPDATE PASSWORD
+    // 3. PROSES VERIFIKASI OTP & UPDATE PASSWORD (FIXED - ANTI GAGAL)
     public function resetPasswordWithOtp(Request $request): RedirectResponse
     {
+        // Ambil email dari session secara otomatis
+        $emailSession = session('reset_email');
+
+        if (!$emailSession) {
+            return redirect()->route('password.request')->withErrors(['email' => 'Sesi Anda telah berakhir, silakan request OTP kembali.']);
+        }
+
+        // Validasi inputan form dari screenshot
         $request->validate([
-            'email' => 'required|email',
             'otp' => 'required|numeric',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok!',
+            'password.min' => 'Password minimal harus 8 karakter!'
         ]);
 
         // Cek apakah OTP cocok dengan email di tabel password_reset_tokens
         $resetData = DB::table('password_reset_tokens')
-            ->where('email', $request->email)
+            ->where('email', $emailSession)
             ->where('token', $request->otp)
             ->first();
 
@@ -90,14 +106,20 @@ class PasswordResetLinkController extends Controller
         }
 
         // Jika cocok, update password user di tabel users
-        $user = User::where('email', $request->email)->first();
-        $user->update([
-            'password' => Hash::make($request->password)
-        ]);
+        $user = User::where('email', $emailSession)->first();
+        
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($request->password)
+            ]);
 
-        // Hapus token biar gak bisa dipake lagi
-        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+            // Hapus token dan session biar bersih & aman
+            DB::table('password_reset_tokens')->where('email', $emailSession)->delete();
+            session()->forget('reset_email');
 
-        return redirect()->route('login')->with('status', 'Password berhasil diubah! Silakan login dengan password baru.');
+            return redirect()->route('login')->with('status', 'Password berhasil diubah! Silakan login dengan password baru.');
+        }
+
+        return redirect()->route('password.request')->withErrors(['email' => 'Gagal memproses perubahan password.']);
     }
 }
