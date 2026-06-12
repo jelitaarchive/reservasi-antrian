@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log; // Import facades Logging
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; // Pastikan model User sudah ada
+use Illuminate\Support\Facades\Http; // Wajib import untuk nembak API Fonnte
+use App\Models\User;
 
 class ForgotPasswordController extends Controller
 {
-    // STEP 1: Kirim OTP ke WhatsApp
+    // STEP 1: Kirim OTP ke WhatsApp rill via Fonnte
     public function sendOtp(Request $request)
     {
         $request->validate([
@@ -18,24 +19,55 @@ class ForgotPasswordController extends Controller
         ]);
 
         $nomorWa = $request->whatsapp_number;
+
+        // Tambahan Keamanan: Cek dulu nomornya ada gak di tabel users
+        $userExists = User::where('whatsapp', $nomorWa)->exists();
+        if (!$userExists) {
+            return back()->withErrors(['whatsapp_number' => 'Nomor WhatsApp tidak terdaftar di sistem kami!']);
+        }
         
         // Generate 6 digit angka random
         $otpCode = rand(100000, 999999);
 
-        // Simpan OTP ke session (atau database) dengan masa berlaku 5 menit
+        // Simpan OTP ke session dengan masa berlaku 5 menit
         session([
             'otp_code' => $otpCode,
             'otp_wa' => $nomorWa,
             'otp_expires_at' => now()->addMinutes(5)
         ]);
 
-        // --- CONTOH LOGGING ---
-        // Mencatat aktivitas ke storage/logs/laravel.log untuk memantau sistem
-        Log::info("OTP Lupa Password berhasil dibuat untuk nomor: {$nomorWa}. Kode OTP: {$otpCode}");
+        // === INTEGRASI API FONNTE WHATSAPP ===
+        $tokenFonnte = env('FONNTE_TOKEN');
+        $isiPesan = "⚠️ *PENGAMANAN AKUN ANTRE.in*\n\nJangan bagikan kode ini kepada siapapun! Kode OTP Lupa Password Anda adalah:\n\n*{$otpCode}*\n\nKode ini hanya berlaku selama 5 menit. Jika Anda tidak merasa melakukan permintaan ini, abaikan pesan ini.";
 
-        // Simulasi mengirim ke WhatsApp API (bisa diganti dengan CURL API WA nanti)
-        // Di sini kita anggap sukses terkirim dan infokan ke user
-        //  GANTI DENGAN KODE INI:
+        try {
+            // Tembak server Fonnte
+            $response = Http::withHeaders([
+                'Authorization' => $tokenFonnte
+            ])->post('https://api.fonnte.com/send', [
+                'target' => $nomorWa,
+                'message' => $isiPesan,
+                'countryCode' => '62',
+            ]);
+
+            $result = $response->json();
+
+            // Cek kalau Fonnte ngasih respon gagal (misal device off/token salah)
+            if (isset($result['status']) && !$result['status']) {
+                Log::error("Fonnte Gateway Error: " . ($result['reason'] ?? 'Unknown Error'));
+                return back()->withErrors(['whatsapp_number' => 'Gagal mengirim pesan WhatsApp, sistem gateway bermasalah.']);
+            }
+
+        } catch (\Exception $e) {
+            // Mencegah aplikasi crash kalau internet server down
+            Log::error("Koneksi Fonnte Gagal: " . $e->getMessage());
+            return back()->withErrors(['whatsapp_number' => 'Gagal menghubungi server WhatsApp, coba lagi nanti.']);
+        }
+
+        // Catat log sekadarnya tanpa membocorkan kode OTP asli demi keamanan
+        Log::info("OTP Lupa Password sukses dikirim via Fonnte ke nomor: {$nomorWa}");
+
+        // Alihkan ke form pengisian kode OTP (sesuai route figma-mu `verify-otp.blade.php`)
         return redirect()->route('password.otp')->with('status', 'Kode OTP telah dikirim ke WhatsApp Anda!');
     }
 
@@ -55,7 +87,7 @@ class ForgotPasswordController extends Controller
             
             Log::warning("Percobaan verifikasi OTP gagal atau kedaluwarsa untuk nomor: " . session('otp_wa'));
             
-            // --- JIKA GAGAL: Kembalikan ke halaman OTP dengan pesan error ---
+            // Jika gagal: Kembalikan dengan error
             return redirect()->route('password.otp')->withErrors(['otp' => 'Kode OTP salah atau sudah kedaluwarsa!']);
         }
 
@@ -64,40 +96,57 @@ class ForgotPasswordController extends Controller
 
         Log::info("Nomor " . session('otp_wa') . " berhasil melakukan verifikasi OTP.");
 
-        // --- 🚀 JIKA SUKSES: Redirect ke halaman Buat Password Baru ---
+        // Redirect ke halaman buat password baru
         return redirect()->route('password.reset');
     }
 
-    // STEP 3: Reset Password & Redirect Kembali ke Login
+    // STEP 3: Reset Password (VERSI FIX - ANTI GAGAL)
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:8|confirmed', // 'confirmed' memastikan password_confirmation cocok
+            'password' => 'required|min:8|confirmed', 
         ]);
 
         if (!session('otp_verified')) {
             return redirect()->route('password.request')->withErrors(['whatsapp_number' => 'Akses ilegal. Selesaikan verifikasi OTP dahulu.']);
         }
 
-        // Cari user berdasarkan nomor WhatsApp yang disimpan di session tadi
-        $user = User::where('whatsapp', session('otp_wa'))->first();
+        // 1. Ambil nomor WA dari session
+        $nomorSession = session('otp_wa');
 
+        // Normalisasi nomor: ambil angka belakangnya aja buat jaga-jaga format 08 atau 62
+        $nomorBersih = ltrim($nomorSession, '0'); // Hapus angka 0 di depan jika ada
+        if (str_starts_with($nomorBersih, '62')) {
+            $nomorBersih = substr($nomorBersih, 2); // Hapus angka 62 di depan jika ada
+        }
+
+        // 2. Cari user di DB dengan pencarian super fleksibel (Mencakup 08xxx, 62xxx, atau langsung xxx)
+        $user = User::where('whatsapp', $nomorSession)
+                    ->orWhere('whatsapp', '0' . $nomorBersih)
+                    ->orWhere('whatsapp', '62' . $nomorBersih)
+                    ->orWhere('whatsapp', 'LIKE', '%' . $nomorBersih)
+                    ->first();
+
+        // 3. Eksekusi simpan jika user ketemu
         if ($user) {
             // Update password baru di database
             $user->password = Hash::make($request->password);
             $user->save();
 
-            // Log aktivitas krusial (Perubahan Password)
-            Log::info("User dengan nomor {$user->whatsapp} berhasil mengubah password-nya.");
+            Log::info("User dengan ID {$user->id} dan nomor {$user->whatsapp} BERHASIL ganti password baru.");
 
-            // Hapus semua data session OTP setelah selesai
+            // Hapus semua data session OTP biar bersih
             session()->forget(['otp_code', 'otp_wa', 'otp_expires_at', 'otp_verified']);
 
-            // --- 🚀 JIKA SUKSES: Redirect ke halaman Login Utama bawaan Laravel ---
+            // Sukses! Lempar ke halaman login utama
             return redirect()->route('login')->with('status', 'Password baru berhasil disimpan! Silakan masuk kembali.');
         }
 
-        Log::error("Gagal mereset password. Nomor " . session('otp_wa') . " tidak ditemukan di database.");
-        return redirect()->route('password.request')->withErrors(['whatsapp_number' => 'Nomor WhatsApp tidak terdaftar di database kami.']);
+        // JIKA GAGAL: Berarti nomor beneran gak ada di DB, kita kasih tau error-nya di layar biar kelihatan
+        Log::error("Gagal mereset password. Nomor dari session ({$nomorSession}) tidak cocok dengan data apapun di DB.");
+        
+        return redirect()->route('password.request')->withErrors([
+            'whatsapp_number' => 'Sistem gagal mengidentifikasi akun Anda. Pastikan nomor WA di profil sama dengan yang diinput!'
+        ]);
     }
 }
