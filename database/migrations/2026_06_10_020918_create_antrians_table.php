@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('antrians', function (Blueprint $table) {
@@ -19,16 +16,14 @@ return new class extends Migration
             $table->string('whatsapp');
             $table->string('jenis_layanan');
             $table->string('kategori_layanan');
-            $table->string('waktu_layanan'); // Untuk nyimpan text Shift A / B
-            $table->string('nomor_antrian'); // Contoh: A-01, B-01
-            $table->date('tanggal_antrian'); // Untuk reset urutan setiap berganti hari
+            $table->string('waktu_layanan'); 
+            $table->string('nomor_antrian'); 
+            $table->date('tanggal_antrian'); 
+            $table->string('status')->default('menunggu'); // Kita pastikan ada kolom status!
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('antrians');

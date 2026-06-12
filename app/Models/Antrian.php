@@ -2,15 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Antrian extends Model
 {
+    use HasFactory;
+
+    // Ini kunci utamanya! Semua kolom wajib didaftarkan di sini agar diizinkan masuk ke DB
     protected $fillable = [
-        'user_id', 
-        'jenis_layanan', 
-        'kode_antrian', 
-        'waktu_layanan', 
-        'status'
+        'nama',
+        'nim',
+        'email',
+        'whatsapp',
+        'jenis_layanan',
+        'kategori_layanan',
+        'waktu_layanan',
+        'nomor_antrian',
+        'tanggal_antrian',
+        'status',
     ];
+
+    // Relasi ke User (opsional, untuk dipanggil di blade jika dibutuhkan)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
 }

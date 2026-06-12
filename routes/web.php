@@ -68,9 +68,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('tambah.antrian');
 
     // Fitur Monitoring Antrian (Halaman Baru)
-    Route::get('/monitoring', function () {
-        return view('monitoring');
-    })->name('monitoring.antrian');
+    Route::get('/monitoring-antrian', [AntreanController::class, 'monitoring'])->name('monitoring.antrian');
 
     // Fitur Riwayat Antrian (Disinkronkan ke name: riwayat.antrian)
     Route::get('/riwayat-antrian', [QueueHistoryController::class, 'index'])->name('riwayat.antrian');
@@ -82,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/tambah-antrian', [AntreanController::class, 'store'])->name('tambah.antrian.store');
     Route::post('/antrian/store', [AntreanController::class, 'store'])->name('antrian.store');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
