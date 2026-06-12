@@ -23,12 +23,19 @@
             <h1 class="text-4xl font-black text-black mb-1">PASSWORD</h1>
             <p class="text-sm text-gray-600 mb-10 pl-1 font-bold uppercase tracking-widest">BARU</p>
             
-            <form method="POST" action="{{ route('password.store') }}" class="space-y-5">
+            <form method="POST" action="{{ route('password.update_custom') }}" class="space-y-5">
                 @csrf
+                
+                @if ($errors->has('whatsapp_number'))
+                    <div class="bg-red-100 text-red-700 p-3 rounded-xl text-xs mb-3 font-semibold">
+                        {{ $errors->first('whatsapp_number') }}
+                    </div>
+                @endif
+
                 <div>
                     <label class="block text-[11px] text-gray-600 mb-2 pl-1 font-bold">PASSWORD BARU</label>
                     <input id="password" type="password" name="password" placeholder="Min. 8 Karakter" 
-                           class="w-full bg-white border-none rounded-2xl px-6 py-4 text-lg focus:ring-2 focus:ring-gray-400" required />
+                        class="w-full bg-white border-none rounded-2xl px-6 py-4 text-lg focus:ring-2 focus:ring-gray-400" required />
                     @error('password')
                         <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
                     @enderror
@@ -37,7 +44,7 @@
                 <div>
                     <label class="block text-[11px] text-gray-600 mb-2 pl-1 font-bold">KONFIRMASI PASSWORD</label>
                     <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Ulangi Password" 
-                           class="w-full bg-white border-none rounded-2xl px-6 py-4 text-lg focus:ring-2 focus:ring-gray-400" required />
+                        class="w-full bg-white border-none rounded-2xl px-6 py-4 text-lg focus:ring-2 focus:ring-gray-400" required />
                 </div>
 
                 <button type="submit" class="w-full bg-[#4E4E4E] text-white text-xl font-bold py-4 mt-4 rounded-3xl hover:bg-black transition shadow-md">

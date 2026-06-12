@@ -18,23 +18,45 @@
         </nav>
     </header>
 
-    <main class="flex items-center px-24 mt-10">
+    <main class="flex items-center px-24 mt-5">
         <div class="bg-[#C2C9D1] w-[500px] rounded-[55px] p-16 shadow-lg">
             <h1 class="text-4xl font-black text-black mb-1">VERIFIKASI</h1>
-            <p class="text-sm text-gray-600 mb-10 pl-1 font-bold uppercase tracking-widest">KODE OTP</p>
+            <p class="text-sm text-gray-600 mb-6 pl-1 font-bold uppercase tracking-widest">KODE OTP</p>
             
-            <form method="POST" action="{{ route('password.verify_otp') }}" class="space-y-8 text-center">
+            @if (session('status'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-2xl text-xs mb-6 font-semibold text-left">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('password.verify_otp') }}" class="space-y-6 text-center">
                 @csrf
+                
                 <div>
-                    <p class="text-[11px] text-gray-500 mb-3 text-left pl-1">KODE DIKIRIM KE WHATSAPP</p>
-                    <input type="text" name="otp" maxlength="6" placeholder="- - - - - -"
-                           class="w-full bg-white border-none rounded-2xl py-5 text-center text-3xl font-black tracking-[0.5em] focus:ring-2 focus:ring-gray-400" required autofocus />
+                    <p class="text-[11px] text-gray-500 mb-2 text-left pl-1">KODE DIKIRIM KE WHATSAPP</p>
+                    <input type="text" name="otp" maxlength="6" placeholder="- - - - - -" value="{{ old('otp') }}"
+                           class="w-full bg-white border-none rounded-2xl py-4 text-center text-3xl font-black tracking-[0.5em] focus:ring-2 focus:ring-gray-400" required autofocus />
                     @error('otp')
-                        <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        <span class="text-red-600 text-xs mt-1.5 block text-left pl-1 font-semibold">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full bg-[#4E4E4E] text-white text-xl font-bold py-4 rounded-3xl hover:bg-black transition shadow-md">
+                <div>
+                    <p class="text-[11px] text-gray-500 mb-2 text-left pl-1">PASSWORD BARU</p>
+                    <input type="password" name="password" placeholder="Minimal 8 Karakter"
+                           class="w-full bg-white border-none rounded-2xl py-3 px-5 text-left text-sm font-bold focus:ring-2 focus:ring-gray-400" required />
+                    @error('password')
+                        <span class="text-red-600 text-xs mt-1.5 block text-left pl-1 font-semibold">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
+                    <p class="text-[11px] text-gray-500 mb-2 text-left pl-1">KONFIRMASI PASSWORD BARU</p>
+                    <input type="password" name="password_confirmation" placeholder="Ulangi Password Baru"
+                           class="w-full bg-white border-none rounded-2xl py-3 px-5 text-left text-sm font-bold focus:ring-2 focus:ring-gray-400" required />
+                </div>
+
+                <button type="submit" class="w-full bg-[#4E4E4E] text-white text-xl font-bold py-4 rounded-3xl hover:bg-black transition shadow-md mt-4">
                     Verifikasi Kode
                 </button>
             </form>

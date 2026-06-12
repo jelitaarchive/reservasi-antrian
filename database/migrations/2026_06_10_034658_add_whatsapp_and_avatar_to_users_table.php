@@ -8,11 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Dikosongkan karena kolom whatsapp dan avatar sudah ada di database nyata
+        Schema::table('users', function (Blueprint $table) {
+            // HAPUS baris avatar, sisakan whatsapp saja!
+            $table->string('whatsapp')->nullable()->after('email');
+        });
     }
 
     public function down(): void
     {
-        // Biarkan kosong
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('whatsapp');
+        });
     }
 };

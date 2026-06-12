@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WhatsAppController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\QueueHistoryController;
 use App\Http\Controllers\AntreanController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdministrasiController;
@@ -93,6 +95,30 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/forgot-password/verify-otp', [PasswordResetLinkController::class, 'resetPasswordWithOtp'])->name('password.verify_otp');
 
 });
+
+Route::get('/reset-password', function() {
+    return view('auth.reset-password');
+})->name('password.reset');
+
+// Proses simpan password barunya
+Route::post('/reset-password/save', [ForgotPasswordController::class, 'resetPassword'])->name('password.update_custom');
+
+// // Route::get('/test-whatsapp-api', function() {
+    // Tentukan nomor tujuan (Gunakan nomor HP kamu sendiri untuk uji coba)
+    //$nomorTujuan = '6281234567890'; // Sesuaikan nomor HP-mu!
+    
+    // Format teks menggunakan Markdown WhatsApp agar terlihat profesional
+    //$isiPesan = "⭐ *SISTEM NOTIFIKASI ANTRE.in* ⭐\n\nHalo Bubb!\n\nJika kamu menerima pesan ini, selamat! Integrasi *WhatsApp API Gateway (Fonnte)* pada project Laravel kamu telah *BERHASIL* terpasang 100%.\n\nReady untuk lanjut ke fitur OTP dan Antrian! 🚀🔥";
+
+    // Panggil fungsi static yang sudah kita buat tadi
+    //$hasil = WhatsAppController::sendMessage($nomorTujuan, $isiPesan);
+
+    // Tampilkan hasilnya di browser
+    //return response()->json([
+        //'keterangan' => 'Status pengiriman dari server lokal:',
+        //'response_fonnte' => $hasil
+    //]);
+//});
 
 
 // Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)
