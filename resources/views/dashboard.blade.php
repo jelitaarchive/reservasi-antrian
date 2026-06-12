@@ -154,7 +154,7 @@
                                 <p id="realtime-date" class="text-sm font-semibold text-gray-500 tracking-wide mt-2">...</p>
                             </div>
 
-                            <img src="{{ asset('images/kalender.png') }}" class="absolute -bottom-2 -right-2 w-24 opacity-20 pointer-events-none">
+                            <img src="{{ asset('images/kalender.png') }}" class="absolute -bottom-2 -right-2 w-45 opacity-100 pointer-events-none">
                         </div>
 
                         <div class="bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm">
