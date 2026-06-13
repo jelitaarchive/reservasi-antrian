@@ -68,7 +68,7 @@
                 <div class="bg-gray-800 rounded-[32px] p-8 text-white shadow-lg mb-6">
                     <div class="flex justify-between items-start mb-12">
                         <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Jenis Pelayanan</p>
+                            <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Kategori Pelayanan</p>
                             <h3 class="text-lg font-bold">{{ $antrianUser->kategori_layanan ?? 'Belum Ada Antrian' }}</h3>
                         </div>
                         <div class="text-right">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="bg-white border border-gray-200 rounded-[32px] p-8 text-center shadow-sm">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Nomor Antrian yang Sedang Dilayani</p>
-                        <h2 class="text-4xl font-bold text-gray-800">{{ $sedangDilayani->nomor_antrian ?? 'Belum Ada' }}</h2>
+                        <h2 class="text-4xl font-bold text-gray-800">{{ $nomorDilayaniText }}</h2>
                     </div>
                 </div>
 

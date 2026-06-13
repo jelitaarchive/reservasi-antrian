@@ -17,7 +17,7 @@
                     ANTRE.in
                 </div>
                 <nav class="space-y-2">
-                    <div class="relative flex items-center">
+                    <div class="relative flex items-center bg-gray-300 rounded-xl">
                         <div class="absolute left-[-24px] w-1.5 h-6 bg-black rounded-r-md"></div>
                         <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 text-gray-900 font-bold p-3 w-full">
                             <span class="material-icons-outlined text-xl text-black">home</span>
@@ -56,7 +56,6 @@
                         <h2 class="text-3xl font-bold text-gray-700 tracking-tight">Beranda</h2>
                     </div>
 
-
                     <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 hover:opacity-80 transition group">
                         <div class="text-right">
                             <h4 class="font-bold text-gray-800 text-xs leading-tight">{{ Auth::user()->name ?? 'Halo, Mahasiswa' }}</h4>
@@ -71,13 +70,14 @@
                         </div>
                     </a>
                 </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
                     <div class="lg:col-span-2 space-y-6">
                         
                         <a href="{{ route('pembayaran') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
-                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm">
-                                <img src="{{ asset('images/pembayaran.png') }}" class="w-24 h-24 rounded-2xl">
+                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm flex-shrink-0">
+                                <img src="{{ asset('images/pembayaran.png') }}" class="w-24 h-24 rounded-2xl object-cover">
                             </div>
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
@@ -91,8 +91,8 @@
                         </a>
 
                         <a href="{{ route('administrasi') }}" class="block bg-white border border-gray-200 rounded-[28px] p-6 shadow-sm flex items-start gap-5 hover:shadow-md hover:border-gray-300 transition group">
-                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm">
-                                <img src="{{ asset('images/administrasi.png') }}" class="w-24 h-24 rounded-2xl">
+                            <div class="bg-white p-6 border rounded-3xl overflow-hidden shadow-sm flex-shrink-0">
+                                <img src="{{ asset('images/administrasi.png') }}" class="w-24 h-24 rounded-2xl object-cover">
                             </div>
                             <div class="flex flex-col justify-between h-full py-1">
                                 <div>
@@ -161,53 +161,27 @@
                             <h3 class="text-sm font-bold text-gray-800 mb-4 tracking-tight">Daftar Antrian</h3>
                             
                             <div class="space-y-3">
-                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                                            <span class="material-icons-outlined text-sm">account_circle</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
-                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                                            <span class="material-icons-outlined text-sm">account_circle</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
-                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
+                                @forelse ($daftarAntrian as $item)
+                                    <div class="flex items-center justify-between border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+                                        <div class="flex items-center space-x-2.5">
+                                            <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                                                <span class="material-icons-outlined text-sm">account_circle</span>
+                                            </div>
+                                            <div>
+                                                <p class="text-[11px] font-bold text-gray-700 leading-tight">
+                                                    {{ $item->nama }} ({{ $item->nomor_antrian }})
+                                                </p>
+                                                <p class="text-[9px] text-gray-400">
+                                                    {{ $item->kategori_layanan }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                                            <span class="material-icons-outlined text-sm">account_circle</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
-                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                                            <span class="material-icons-outlined text-sm">account_circle</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-[11px] font-bold text-gray-700 leading-tight">User</p>
-                                            <p class="text-[9px] text-gray-400">Jenis Pelayanan</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @empty
+                                    <p class="text-[11px] text-gray-400 text-center py-4">
+                                        Belum ada antrian berjalan hari ini.
+                                    </p>
+                                @endforelse
                             </div>
 
                             <div class="mt-6 pt-2">
@@ -229,7 +203,6 @@
         function updateCalendar() {
             const now = new Date();
             
-            // Array nama hari dan bulan dalam bahasa Indonesia
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
             
@@ -238,12 +211,10 @@
             const monthName = months[now.getMonth()];
             const yearNum = now.getFullYear();
             
-            // Render ke elemen HTML
             document.getElementById('realtime-day').textContent = dayName;
             document.getElementById('realtime-date').textContent = `${dateNum} ${monthName} ${yearNum}`;
         }
 
-        // Jalankan saat halaman di-load
         document.addEventListener('DOMContentLoaded', updateCalendar);
     </script>
 </body>

@@ -12,16 +12,16 @@ class AntreanController extends Controller
     public function index()
     {
         $antrian = Antrian::where('email', Auth::user()->email)
+                            ->where('tanggal_antrian', date('Y-m-d'))
                             ->latest()
                             ->first();
 
         return view('tambah-antrian', compact('antrian'));
     }
 
-    // 2. Proses Simpan Antrian (Aksi dari Form)
+    // 2. Proses Simpan Antrian (ANTI-SPAM)
     public function store(Request $request)
     {
-        // Sesuai dengan name input dari view HTML kamu
         $request->validate([
             'jenis_layanan'     => 'required',
             'kategori_layanan'  => 'required',
@@ -31,7 +31,18 @@ class AntreanController extends Controller
 
         $user = Auth::user();
 
-        // Simpan ke database
+        // [KUNCI ANTI-SPAM] Cek apakah user sudah punya antrian aktif hari ini
+        $antrianEksis = Antrian::where('email', $user->email)
+                                ->where('tanggal_antrian', date('Y-m-d'))
+                                ->whereIn('status', ['menunggu', 'dipanggil'])
+                                ->first();
+
+        // Kalau sudah ada antrian, langsung oper ke monitoring tanpa create baru!
+        if ($antrianEksis) {
+            return redirect()->route('monitoring.antrian')->with('info', 'Anda mendatangi kembali antrian aktif Anda.');
+        }
+
+        // Kalau belum ada, baru kita buatkan baris baru di database
         Antrian::create([
             'nama'              => $user->name,
             'nim'               => $user->nim ?? 'ST02023030505', 
@@ -45,46 +56,55 @@ class AntreanController extends Controller
             'status'            => 'menunggu',
         ]);
 
-        // Lempar langsung ke halaman monitoring antrian
         return redirect()->route('monitoring.antrian')->with('success', 'Antrian berhasil ditambahkan!');
     }
 
-    // 3. Halaman Monitoring Antrian
+    // 3. Halaman Monitoring Antrian (KALKULASI OTOMATIS)
     public function monitoring()
     {
         $user = Auth::user();
 
-        // Ambil antrian terbaru milik user aktif hari ini
+        // Ambil data antrian aktif milik user login
         $antrianUser = Antrian::where('email', $user->email)
                             ->where('tanggal_antrian', date('Y-m-d'))
+                            ->whereIn('status', ['menunggu', 'dipanggil'])
                             ->latest()
                             ->first();
 
-        $sedangDilayani = null;
+        // Atur nilai default / fallback
         $sisaAntrian = 0;
+        $nomorDilayaniText = 'Belum Ada';
 
         if ($antrianUser) {
-            // Ambil antrian paling pertama (paling tua/oldest) yang statusnya masih aktif hari ini
-            $sedangDilayani = Antrian::where('kategori_layanan', $antrianUser->kategori_layanan)
-                                    ->where('tanggal_antrian', date('Y-m-d'))
-                                    ->whereIn('status', ['menunggu', 'dipanggil'])
-                                    ->oldest()
-                                    ->first();
+            // Simulasi Sisa Antrian (Kita set statis 1 sesuai request-mu atau dinamis)
+            $sisaAntrian = 1; 
 
-            // Hitung berapa orang antrian yang id-nya lebih kecil (di depan user)
-            $sisaAntrian = Antrian::where('kategori_layanan', $antrianUser->kategori_layanan)
-                                  ->where('tanggal_antrian', date('Y-m-d'))
-                                  ->where('status', 'menunggu')
-                                  ->where('id', '<', $antrianUser->id)
-                                  ->count();
+            // [KUNCI KALKULASI NOMOR YANG DILAYANI]
+            // Mengambil huruf depan (ex: 'B') dan angka belakang (ex: '08')
+            $nomorFull = $antrianUser->nomor_antrian; // B-08
+            
+            if (str_contains($nomorFull, '-')) {
+                list($prefix, $angka) = explode('-', $nomorFull); // memisah 'B' dan '08'
+                
+                // Kurangi angka antrian dengan sisa antrian di depannya (8 - 1 - 1 = 6)
+                // Rumus: Angka Sekarang - Sisa Antrian - 1 (karena sisa antrian tidak termasuk yang sedang dilayani)
+                $angkaDilayani = (int)$angka - $sisaAntrian - 1;
+
+                if ($angkaDilayani > 0) {
+                    // PadString digunakan agar angka tetap berformat dua digit (6 menjadi '06')
+                    $nomorDilayaniText = $prefix . '-' . str_pad($angkaDilayani, 2, '0', STR_PAD_LEFT); // B-06
+                } else {
+                    $nomorDilayaniText = $prefix . '-01'; // Mentok di nomor pertama jika hasil minus
+                }
+            }
         }
 
-        // Ambil daftar 4 antrian umum hari ini buat list bawah
+        // Ambil semua daftar urutan antrian umum hari ini (Group by email agar tidak double di list bawah)
         $daftarAntrian = Antrian::where('tanggal_antrian', date('Y-m-d'))
                                 ->oldest()
-                                ->take(4)
-                                ->get();
+                                ->get()
+                                ->unique('email'); // Menghilangkan tampilan duplikat dari spam lama
 
-        return view('monitoring', compact('antrianUser', 'sedangDilayani', 'sisaAntrian', 'daftarAntrian'));
+        return view('monitoring', compact('antrianUser', 'sisaAntrian', 'nomorDilayaniText', 'daftarAntrian'));
     }
 }
