@@ -7,7 +7,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
-<!-- MODIFIKASI: Menambahkan state nomor_acak, maxAntrian, dan fungsi generate/cek limit antrian -->
 <body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" 
       x-data="{ 
           step: 1, 
@@ -29,17 +28,39 @@
               this.nomor_acak = infoSesi + '-' + formatAngka;
           },
           simpanAntrian() {
-              let key = 'antrian_count_' + this.userId;
-              let currentCount = parseInt(localStorage.getItem(key)) || 0;
+              let keyCount = 'antrian_count_' + this.userId;
+              let keyData = 'daftar_antrian_lokal';
+              let currentCount = parseInt(localStorage.getItem(keyCount)) || 0;
               
               if (currentCount >= 3) {
                   alert('Maaf, akun Anda telah mencapai batas maksimal mengambil antrian sebanyak 3 kali!');
                   return;
               }
               
-              // Tambahkan hitungan antrian dan generate nomor
-              localStorage.setItem(key, (currentCount + 1).toString());
+              // 1. Tambah hitungan antrian & generate nomor baru
+              localStorage.setItem(keyCount, (currentCount + 1).toString());
               this.generateNomor();
+
+              // 2. Ambil data input untuk disimpan ke list monitoring
+              let namaInput = document.getElementById('nama').value;
+              let kategoriInput = document.querySelector('input[name=\'kategori_layanan\']:checked')?.value || 'Umum';
+
+              // 3. Ambil list antrian yang sudah ada di localStorage atau buat array baru jika kosong
+              let listAntrian = JSON.parse(localStorage.getItem(keyData)) || [];
+              
+              // 4. Masukkan objek antrian baru milik user saat ini ke dalam list
+              listAntrian.push({
+                  userId: this.userId,
+                  nama: namaInput,
+                  nomor_antrian: this.nomor_acak,
+                  kategori_layanan: kategoriInput,
+                  waktu_layanan: this.waktu_layanan,
+                  status: 'menunggu'
+              });
+
+              // 5. Simpan kembali ke localStorage dalam bentuk string JSON
+              localStorage.setItem(keyData, JSON.stringify(listAntrian));
+              
               this.step = 5;
           }
       }">
@@ -57,7 +78,7 @@
                         <span class="font-medium text-sm">Beranda</span>
                     </a>
                     
-                    <a href="{{ route('riwayat.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('monitoring.antrian') }}" class="flex items-center space-x-3 text-gray-400 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">analytics</span>
                         <span class="font-medium text-sm">Monitoring Antrian</span>
                     </a>
@@ -120,10 +141,11 @@
                     <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
                         <p class="text-gray-400 text-xs mt-0.5 mb-8">Lengkapi biodata dibawah ini!</p>
-                        <!-- MODIFIKASI: Notifikasi Limit Antrian di Awal -->
+                        
                         <div x-show="parseInt(localStorage.getItem('antrian_count_' + userId)) >= 3" class="mb-4 p-4 text-xs text-red-700 bg-red-100 border border-red-200 rounded-2xl font-semibold">
                             ⚠️ Akun kamu sudah mengambil batas maksimal 3 antrian. Kamu tidak bisa melanjutkan pengisian form ini.
                         </div>
+
                         <div class="space-y-5">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">Nama Lengkap</label>
@@ -142,7 +164,6 @@
                                 <input type="text" id="whatsapp" name="whatsapp" required value="{{ Auth::user()->whatsapp ?? '081234567890' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
                             </div>
                             <div class="pt-6">
-                                <!-- MODIFIKASI: Validasi limit antrian sebelum melaju ke step 2 -->
                                 <button type="button" @click="if(parseInt(localStorage.getItem('antrian_count_' + userId)) >= 3) { alert('Batas maksimal antrian tercapai!'); return; } if(document.getElementById('nama').checkValidity() && document.getElementById('nim').checkValidity() && document.getElementById('email').checkValidity() && document.getElementById('whatsapp').checkValidity()) { step = 2; } else { document.getElementById('queueForm').reportValidity(); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                     <span>Lanjutkan</span>
                                     <span class="material-icons-outlined text-sm">arrow_forward</span>
@@ -329,7 +350,6 @@
                         </div>
                         <input type="hidden" name="waktu_layanan" :value="waktu_layanan" required>
                         <div>
-                            <!-- MODIFIKASI: Mengubah trigger @click untuk memanggil fungsi simpanAntrian() -->
                             <button type="button" @click="if(waktu_layanan !== '') { simpanAntrian(); } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                 <span>Kirim</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
@@ -341,7 +361,6 @@
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
                         
-                        <!-- MODIFIKASI DISINI: Mengikat nomor_acak hasil generate acak -->
                         <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none" 
                              x-text="nomor_acak"></div>
                              
