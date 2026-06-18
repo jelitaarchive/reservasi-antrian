@@ -7,7 +7,42 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
-<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" x-data="{ step: 1, waktu_layanan: '', jenis_layanan: '' }">
+<!-- MODIFIKASI: Menambahkan state nomor_acak, maxAntrian, dan fungsi generate/cek limit antrian -->
+<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased" 
+      x-data="{ 
+          step: 1, 
+          waktu_layanan: '', 
+          jenis_layanan: '', 
+          nomor_acak: '',
+          userId: '{{ Auth::user()->id ?? 'guest' }}',
+          init() {
+              // Reset atau cek batas antrian di localStorage berdasarkan ID User
+              let key = 'antrian_count_' + this.userId;
+              if (!localStorage.getItem(key)) {
+                  localStorage.setItem(key, '0');
+              }
+          },
+          generateNomor() {
+              let infoSesi = this.waktu_layanan === '08.00-12.00 WIB' ? 'A' : 'B';
+              let angka = Math.floor(Math.random() * 15) + 1;
+              let formatAngka = angka < 10 ? '0' + angka : angka;
+              this.nomor_acak = infoSesi + '-' + formatAngka;
+          },
+          simpanAntrian() {
+              let key = 'antrian_count_' + this.userId;
+              let currentCount = parseInt(localStorage.getItem(key)) || 0;
+              
+              if (currentCount >= 3) {
+                  alert('Maaf, akun Anda telah mencapai batas maksimal mengambil antrian sebanyak 3 kali!');
+                  return;
+              }
+              
+              // Tambahkan hitungan antrian dan generate nomor
+              localStorage.setItem(key, (currentCount + 1).toString());
+              this.generateNomor();
+              this.step = 5;
+          }
+      }">
 
     <div class="flex min-h-screen">
         
@@ -85,6 +120,10 @@
                     <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
                         <p class="text-gray-400 text-xs mt-0.5 mb-8">Lengkapi biodata dibawah ini!</p>
+                        <!-- MODIFIKASI: Notifikasi Limit Antrian di Awal -->
+                        <div x-show="parseInt(localStorage.getItem('antrian_count_' + userId)) >= 3" class="mb-4 p-4 text-xs text-red-700 bg-red-100 border border-red-200 rounded-2xl font-semibold">
+                            ⚠️ Akun kamu sudah mengambil batas maksimal 3 antrian. Kamu tidak bisa melanjutkan pengisian form ini.
+                        </div>
                         <div class="space-y-5">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-500 mb-1.5 pl-3">Nama Lengkap</label>
@@ -103,7 +142,8 @@
                                 <input type="text" id="whatsapp" name="whatsapp" required value="{{ Auth::user()->whatsapp ?? '081234567890' }}" class="w-full px-5 py-2.5 border border-gray-300 rounded-full text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 transition">
                             </div>
                             <div class="pt-6">
-                                <button type="button" @click="if(document.getElementById('nama').checkValidity() && document.getElementById('nim').checkValidity() && document.getElementById('email').checkValidity() && document.getElementById('whatsapp').checkValidity()) { step = 2; } else { document.getElementById('queueForm').reportValidity(); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                                <!-- MODIFIKASI: Validasi limit antrian sebelum melaju ke step 2 -->
+                                <button type="button" @click="if(parseInt(localStorage.getItem('antrian_count_' + userId)) >= 3) { alert('Batas maksimal antrian tercapai!'); return; } if(document.getElementById('nama').checkValidity() && document.getElementById('nim').checkValidity() && document.getElementById('email').checkValidity() && document.getElementById('whatsapp').checkValidity()) { step = 2; } else { document.getElementById('queueForm').reportValidity(); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                     <span>Lanjutkan</span>
                                     <span class="material-icons-outlined text-sm">arrow_forward</span>
                                 </button>
@@ -193,36 +233,27 @@
 
                     <div x-show="step === 3" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all" 
                          x-data="{ 
-                            fileList: [], // Menampung objek file asli beserta namanya
+                            fileList: [], 
                             handleFiles(event) {
                                 const selectedFiles = Array.from(event.target.files);
-                                
-                                // 1. Validasi ekstensi harus PDF
                                 const nonPdf = selectedFiles.some(file => !file.name.toLowerCase().endsWith('.pdf'));
                                 if (nonPdf) {
                                     alert('Format file tidak didukung! Seluruh berkas harus bertipe ekstensi .pdf');
                                     event.target.value = ''; 
                                     return;
                                 }
-
-                                // 2. Gabungkan file baru ke fileList (Bisa upload berkali-kali tanpa hilang)
                                 selectedFiles.forEach(file => {
-                                    // Cek biar tidak ada file dengan nama kembar yang masuk
                                     if (!this.fileList.some(f => f.name === file.name)) {
                                         this.fileList.push(file);
                                     }
                                 });
-
-                                // 3. Sinkronisasikan file ke input asli
                                 this.syncFilesToInput();
                             },
                             removeFile(index) {
-                                // Hapus file berdasarkan index
                                 this.fileList.splice(index, 1);
                                 this.syncFilesToInput();
                             },
                             syncFilesToInput() {
-                                // Menggunakan DataTransfer API agar file di array masuk ke input file HTML
                                 const dataTransfer = new DataTransfer();
                                 this.fileList.forEach(file => dataTransfer.items.add(file));
                                 document.getElementById('berkas').files = dataTransfer.files;
@@ -298,7 +329,8 @@
                         </div>
                         <input type="hidden" name="waktu_layanan" :value="waktu_layanan" required>
                         <div>
-                            <button type="button" @click="if(waktu_layanan !== '') { step = 5; } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
+                            <!-- MODIFIKASI: Mengubah trigger @click untuk memanggil fungsi simpanAntrian() -->
+                            <button type="button" @click="if(waktu_layanan !== '') { simpanAntrian(); } else { alert('Pilih salah satu waktu sesi layanan terlebih dahulu!'); }" class="w-full py-2.5 border border-gray-300 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-50 transition flex items-center justify-center space-x-1.5">
                                 <span>Kirim</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </button>
@@ -308,7 +340,11 @@
                     <div x-show="step === 5" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all flex flex-col items-center">
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
                         <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
-                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none">A-09</div>
+                        
+                        <!-- MODIFIKASI DISINI: Mengikat nomor_acak hasil generate acak -->
+                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none" 
+                             x-text="nomor_acak"></div>
+                             
                         <div class="w-full max-w-md mt-8 space-y-4 text-xs px-4">
                             <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                                 <span class="text-gray-400 font-medium">Jenis Pelayanan</span>
@@ -320,7 +356,7 @@
                             </div>
                         </div>
                         <div class="w-full pt-12">
-                            <a href="{{ route('riwayat.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <a href="{{ route('monitoring.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
                                 <span>Monitoring Antrian</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </a>
