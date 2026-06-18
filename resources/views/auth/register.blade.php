@@ -11,7 +11,6 @@
 
 <div class="min-h-screen">
 
-    <!-- Navbar -->
     <nav class="flex justify-between items-center px-20 py-8">
 
         <h1 class="text-5xl font-bold">
@@ -41,17 +40,14 @@
 
     </nav>
 
-    <!-- Content -->
     <div class="flex justify-between items-center px-20 mt-10">
 
-        <!-- Card Register -->
         <div class="bg-gray-300 rounded-[40px] p-10 w-[500px] shadow-lg">
 
             <h2 class="text-5xl font-bold mb-6">
                 DAFTAR
             </h2>
 
-            <!-- ERROR VALIDASI -->
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     <ul>
@@ -62,7 +58,6 @@
                 </div>
             @endif
 
-            <!-- SUCCESS -->
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     {{ session('success') }}
@@ -75,13 +70,29 @@
 
                 @csrf
 
-                <!-- NIM -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
+                        Daftar Sebagai
+                    </label>
+
+                    <select
+                        id="roleSelect"
+                        name="role"
+                        class="w-full rounded-full border border-gray-500 px-5 py-3 bg-white appearance-none"
+                        required
+                    >
+                        <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label id="identityLabel" class="block text-lg mb-1">
                         NIM
                     </label>
 
                     <input
+                        id="identityInput"
                         type="text"
                         name="nim"
                         value="{{ old('nim') }}"
@@ -90,7 +101,6 @@
                     >
                 </div>
 
-                <!-- Nama -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
                         Nama Lengkap
@@ -105,7 +115,6 @@
                     >
                 </div>
 
-                <!-- Email -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
                         Email
@@ -120,7 +129,6 @@
                     >
                 </div>
 
-                <!-- Phone -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
                         Nomor WhatsApp
@@ -134,7 +142,6 @@
                     >
                 </div>
 
-                <!-- Password -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
                         Password
@@ -148,7 +155,6 @@
                     >
                 </div>
 
-                <!-- Konfirmasi Password -->
                 <div class="mb-4">
                     <label class="block text-lg mb-1">
                         Konfirmasi Password
@@ -177,7 +183,6 @@
 
         </div>
 
-        <!-- Tombol Daftar -->
         <div class="flex-1 flex justify-center items-center">
 
             <button
@@ -194,6 +199,32 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('roleSelect');
+        const identityLabel = document.getElementById('identityLabel');
+        const identityInput = document.getElementById('identityInput');
+
+        function updateIdentityField() {
+            if (roleSelect.value === 'admin') {
+                identityLabel.textContent = 'NIK';
+                identityInput.name = 'nim'; // Tetap gunakan 'nim' agar kamu tidak perlu mengubah backend RegisterController lama, atau ubah ke 'nik' jika di backend sudah dipisah.
+                identityInput.placeholder = 'Masukkan NIK Anda';
+            } else {
+                identityLabel.textContent = 'NIM';
+                identityInput.name = 'nim';
+                identityInput.placeholder = 'Masukkan NIM Anda';
+            }
+        }
+
+        // Jalankan saat pertama kali halaman dimuat (untuk handle old value jika reload/gagal validasi)
+        updateIdentityField();
+
+        // Jalankan setiap kali dropdown berubah
+        roleSelect.addEventListener('change', updateIdentityField);
+    });
+</script>
 
 </body>
 </html>
