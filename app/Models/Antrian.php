@@ -9,7 +9,7 @@ class Antrian extends Model
 {
     use HasFactory;
 
-    // Ini kunci utamanya! Semua kolom wajib didaftarkan di sini agar diizinkan masuk ke DB
+    protected $table = 'antrians';
     protected $fillable = [
         'nama',
         'nim',

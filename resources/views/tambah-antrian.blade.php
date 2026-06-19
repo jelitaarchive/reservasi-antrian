@@ -28,41 +28,29 @@
               this.nomor_acak = infoSesi + '-' + formatAngka;
           },
           simpanAntrian() {
-              let keyCount = 'antrian_count_' + this.userId;
-              let keyData = 'daftar_antrian_lokal';
-              let currentCount = parseInt(localStorage.getItem(keyCount)) || 0;
-              
-              if (currentCount >= 3) {
-                  alert('Maaf, akun Anda telah mencapai batas maksimal mengambil antrian sebanyak 3 kali!');
-                  return;
-              }
-              
-              // 1. Tambah hitungan antrian & generate nomor baru
-              localStorage.setItem(keyCount, (currentCount + 1).toString());
-              this.generateNomor();
+                // 1. Ambil tanggal hari ini format YYYY-MM-DD dengan JavaScript lokalan browser
+                const hariIni = new Date().toISOString().split('T')[0]; 
+                
+                // 2. Selipkan tanggal hari ini ke dalam KEY localStorage
+                let keyCount = 'antrian_count_' + this.userId + '_' + hariIni;
+                
+                // 3. Ambil hitungan berdasarkan tanggal hari ini
+                let currentCount = parseInt(localStorage.getItem(keyCount)) || 0;
+                
+                if (currentCount >= 3) {
+                    alert('Maaf, Anda telah mencapai batas maksimal mengambil antrian sebanyak 3 kali untuk HARI INI!');
+                    return;
+                }
+                
+                // 4. Tambah hitungan antrian khusus hari ini & buat nomor acak
+                localStorage.setItem(keyCount, (currentCount + 1).toString());
+                this.generateNomor();
 
-              // 2. Ambil data input untuk disimpan ke list monitoring
-              let namaInput = document.getElementById('nama').value;
-              let kategoriInput = document.querySelector('input[name=\'kategori_layanan\']:checked')?.value || 'Umum';
-
-              // 3. Ambil list antrian yang sudah ada di localStorage atau buat array baru jika kosong
-              let listAntrian = JSON.parse(localStorage.getItem(keyData)) || [];
-              
-              // 4. Masukkan objek antrian baru milik user saat ini ke dalam list
-              listAntrian.push({
-                  userId: this.userId,
-                  nama: namaInput,
-                  nomor_antrian: this.nomor_acak,
-                  kategori_layanan: kategoriInput,
-                  waktu_layanan: this.waktu_layanan,
-                  status: 'menunggu'
-              });
-
-              // 5. Simpan kembali ke localStorage dalam bentuk string JSON
-              localStorage.setItem(keyData, JSON.stringify(listAntrian));
-              
-              this.step = 5;
-          }
+                // 5. Submit form asli ke database MySQL
+                this.$nextTick(() => {
+                    document.getElementById('queueForm').submit();
+                });
+            }
       }">
 
     <div class="flex min-h-screen">
@@ -135,8 +123,8 @@
                     <div class="w-full h-3 rounded-full transition-colors duration-300" :class="step >= 4 ? 'bg-blue-500 border border-blue-600 shadow-sm' : 'bg-[#D9D9D9]'"></div>
                 </div>
 
-                <form id="queueForm" action="#" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <form id="queueForm" action="{{ route('antrian.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf <input type="hidden" name="nomor_antrian" :value="nomor_acak">
 
                     <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
@@ -183,11 +171,11 @@
                                 <label class="block text-xs font-bold text-gray-500 mb-3">Jenis Layanan</label>
                                 <div class="space-y-3 pl-1">
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" id="layanan_pembayaran" name="layanan" value="Pembayaran" x-model="jenis_layanan" required class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" id="layanan_pembayaran" name="jenis_layanan" value="Pembayaran" x-model="jenis_layanan" required class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600 font-medium">Pembayaran</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" id="layanan_administrasi" name="layanan" value="Administrasi" x-model="jenis_layanan" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" id="layanan_administrasi" name="jenis_layanan" value="Administrasi" x-model="jenis_layanan" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600 font-medium">Administrasi</span>
                                     </label>
                                 </div>
@@ -206,15 +194,15 @@
                                         <span class="text-xs text-gray-600">Pembayaran UKT</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pembayaran KKL" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="kategori_layanan" value="Pembayaran KKL" :required="jenis_layanan === 'Pembayaran'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600">Pembayaran KKL</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pengajuan Keringanan UKT" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="kategori_layanan" value="Pengajuan Keringanan UKT" :required="jenis_layanan === 'Pembayaran'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600">Pengajuan Keringanan UKT</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pembayaran Non-Akademik" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="kategori_layanan" value="Pembayaran Non-Akademik" :required="jenis_layanan === 'Pembayaran'"e class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600">Pembayaran Non-Akademik</span>
                                     </label>
                                 </div>

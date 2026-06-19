@@ -24,10 +24,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Dashboard Utama Admin
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
+    // Kelola Antrian
+    Route::get('/admin/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
+
     // Edit Profil Khusus Admin (resources/views/admin/profil.blade.php)
     Route::get('/admin/profile', function () {
         return view('admin.profil-admin'); 
     })->name('admin.profile.edit');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    // Jalur halaman kelola utama
+    Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
+    
+    // Jalur aksi ubah status (Panggil, Selesai, Batal)
+    Route::patch('/antrian/{id}/status/{status}', [AdminDashboardController::class, 'updateStatus'])->name('admin.antrian.update-status');
+    
+    // Jalur aksi hapus permanen data
+    Route::delete('/antrian/{id}/delete', [AdminDashboardController::class, 'destroy'])->name('admin.antrian.destroy');
 });
 
 // ========================================================

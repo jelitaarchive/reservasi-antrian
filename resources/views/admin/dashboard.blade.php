@@ -22,20 +22,20 @@
                 
                 <nav class="space-y-1">
                     <div class="relative flex items-center bg-gray-800 rounded-xl mb-4">
-                        <a href="#" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
                             <span class="material-icons-outlined text-xl text-white">home</span>
                             <span class="text-sm">Dashboard</span>
                         </a>
                     </div>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola.antrian') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">dashboard</span>
-                        <span class="font-medium text-sm">Loket</span>
+                        <span class="font-medium text-sm">Kelola Antrian</span>
                     </a>
                     
                     <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">headset_mic</span>
-                        <span class="font-medium text-sm">Customer Service</span>
+                        <span class="font-medium text-sm">Kelola Layanan</span>
                     </a>
                     
                     <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">

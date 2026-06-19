@@ -2,108 +2,123 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Antrian;
+use App\Models\Antrian; // Memastikan pemanggilan Model menggunakan "i" (Antrian)
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class AntreanController extends Controller
 {
     // 1. Halaman Tambah Antrian
     public function index()
     {
+        $hariIni = Carbon::today()->toDateString();
+        
         $antrian = Antrian::where('email', Auth::user()->email)
-                            ->where('tanggal_antrian', date('Y-m-d'))
+                            ->whereDate('tanggal_antrian', $hariIni)
                             ->latest()
                             ->first();
 
         return view('tambah-antrian', compact('antrian'));
     }
 
-    // 2. Proses Simpan Antrian (ANTI-SPAM)
+    // 2. Proses Simpan Antrian (ANTI-SPAM & FIX NULL VALUE)
     public function store(Request $request)
-    {
+    {   
         $request->validate([
-            'jenis_layanan'     => 'required',
-            'kategori_layanan'  => 'required',
-            'waktu_layanan'     => 'required',
-            'nomor_antrian'     => 'required',
+            'nama' => 'required',
+            'nim' => 'required',
+            'email' => 'required|email',
+            'whatsapp' => 'required',
+            'kategori_layanan' => 'required',
+            'waktu_layanan' => 'required',
+            'nomor_antrian' => 'required',
         ]);
 
         $user = Auth::user();
+        $hariIni = Carbon::today()->toDateString();
 
-        // [KUNCI ANTI-SPAM] Cek apakah user sudah punya antrian aktif hari ini
+        // [KUNCI ANTI-SPAM]: Cek apakah user sudah punya antrian aktif (menunggu/melayani) HARI INI
         $antrianEksis = Antrian::where('email', $user->email)
-                                ->where('tanggal_antrian', date('Y-m-d'))
-                                ->whereIn('status', ['menunggu', 'dipanggil'])
+                                ->whereDate('tanggal_antrian', $hariIni)
+                                ->whereIn('status', ['menunggu', 'melayani']) // Sesuai ENUM database baru
                                 ->first();
 
-        // Kalau sudah ada antrian, langsung oper ke monitoring tanpa create baru!
+        // Kalau sudah ada antrian aktif, langsung oper ke monitoring tanpa membuat data ganda
         if ($antrianEksis) {
             return redirect()->route('monitoring.antrian')->with('info', 'Anda mendatangi kembali antrian aktif Anda.');
         }
 
-        // Kalau belum ada, baru kita buatkan baris baru di database
+        // Kalau belum ada, buat baris baru di database
         Antrian::create([
-            'nama'              => $user->name,
-            'nim'               => $user->nim ?? 'ST02023030505', 
-            'email'             => $user->email,
-            'whatsapp'          => $user->whatsapp ?? '',
-            'jenis_layanan'     => $request->jenis_layanan,
-            'kategori_layanan'  => $request->kategori_layanan,
-            'waktu_layanan'     => $request->waktu_layanan,
-            'nomor_antrian'     => $request->nomor_antrian,
-            'tanggal_antrian'   => date('Y-m-d'),
-            'status'            => 'menunggu',
+            'nama'             => $user->name,
+            'nim'              => $user->nim ?? 'ST02023030505', 
+            'email'            => $user->email,
+            'whatsapp'         => $request->whatsapp ?? '',
+            
+            // FIX: Mengambil nilai input 'jenis_layanan', jika kosong otomatis diset 'Umum' agar tidak eror SQL
+            'jenis_layanan'    => $request->jenis_layanan ?? 'Umum', 
+            
+            'kategori_layanan' => $request->kategori_layanan,
+            'waktu_layanan'    => $request->waktu_layanan,
+            'nomor_antrian'    => $request->nomor_antrian,
+            'tanggal_antrian'  => $hariIni,
+            'status'           => 'menunggu', // Status default awal masuk database
         ]);
 
         return redirect()->route('monitoring.antrian')->with('success', 'Antrian berhasil ditambahkan!');
     }
 
-    // 3. Halaman Monitoring Antrian (KALKULASI OTOMATIS)
+    // 3. Halaman Monitoring Antrian (REAL-TIME & DINAMIS DARI DATABASE)
     public function monitoring()
     {
         $user = Auth::user();
+        $hariIni = Carbon::today()->toDateString();
 
-        // Ambil data antrian aktif milik user login
+        // A. Ambil data antrian aktif milik mahasiswa yang sedang login hari ini
         $antrianUser = Antrian::where('email', $user->email)
-                            ->where('tanggal_antrian', date('Y-m-d'))
-                            ->whereIn('status', ['menunggu', 'dipanggil'])
+                            ->whereDate('tanggal_antrian', $hariIni)
+                            ->whereIn('status', ['menunggu', 'melayani'])
                             ->latest()
                             ->first();
 
-        // Atur nilai default / fallback
+        // Atur nilai default / fallback awal
         $sisaAntrian = 0;
         $nomorDilayaniText = 'Belum Ada';
 
+        // B. Jika mahasiswa tersebut memiliki antrian aktif, hitung sisa antrian di depannya secara presisi
         if ($antrianUser) {
-            // Simulasi Sisa Antrian (Kita set statis 1 sesuai request-mu atau dinamis)
-            $sisaAntrian = 1; 
+            // Sisa antrian = menghitung berapa banyak antrian 'menunggu' yang ID-nya lebih kecil (lebih dulu terdaftar) daripada ID antrian user
+            $sisaAntrian = Antrian::whereDate('tanggal_antrian', $hariIni)
+                                    ->where('status', 'menunggu')
+                                    ->where('id', '<', $antrianUser->id)
+                                    ->count();
+        }
 
-            // [KUNCI KALKULASI NOMOR YANG DILAYANI]
-            // Mengambil huruf depan (ex: 'B') dan angka belakang (ex: '08')
-            $nomorFull = $antrianUser->nomor_antrian; // B-08
-            
-            if (str_contains($nomorFull, '-')) {
-                list($prefix, $angka) = explode('-', $nomorFull); // memisah 'B' dan '08'
-                
-                // Kurangi angka antrian dengan sisa antrian di depannya (8 - 1 - 1 = 6)
-                // Rumus: Angka Sekarang - Sisa Antrian - 1 (karena sisa antrian tidak termasuk yang sedang dilayani)
-                $angkaDilayani = (int)$angka - $sisaAntrian - 1;
+        // C. Cari nomor antrian berapa yang SAAT INI sedang dipanggil/dilayani oleh Admin di loket
+        $antrianSedangDilayani = Antrian::whereDate('tanggal_antrian', $hariIni)
+                                        ->where('status', 'melayani')
+                                        ->first();
 
-                if ($angkaDilayani > 0) {
-                    // PadString digunakan agar angka tetap berformat dua digit (6 menjadi '06')
-                    $nomorDilayaniText = $prefix . '-' . str_pad($angkaDilayani, 2, '0', STR_PAD_LEFT); // B-06
-                } else {
-                    $nomorDilayaniText = $prefix . '-01'; // Mentok di nomor pertama jika hasil minus
-                }
+        if ($antrianSedangDilayani) {
+            // Jika ada yang berstatus melayani, ambil nomor antriannya langsung dari DB (Contoh: A-04)
+            $nomorDilayaniText = $antrianSedangDilayani->nomor_antrian;
+        } else {
+            // Jika tidak ada yang berstatus melayani, cari antrian terakhir yang barusan 'selesai'
+            $antrianTerakhirSelesai = Antrian::whereDate('tanggal_antrian', $hariIni)
+                                            ->where('status', 'selesai')
+                                            ->latest()
+                                            ->first();
+            if ($antrianTerakhirSelesai) {
+                $nomorDilayaniText = $antrianTerakhirSelesai->nomor_antrian . ' (Selesai)';
             }
         }
 
-        // Ambil semua daftar urutan antrian umum hari ini (Group by email agar tidak double di list bawah)
-        $daftarAntrian = Antrian::where('tanggal_antrian', date('Y-m-d'))
+        // D. Ambil seluruh daftar urutan antrian aktif hari ini untuk list tabel di bagian bawah halaman
+        $daftarAntrian = Antrian::whereDate('tanggal_antrian', $hariIni)
+                                ->whereIn('status', ['menunggu', 'melayani'])
                                 ->oldest()
-                                ->get()
-                                ->unique('email'); // Menghilangkan tampilan duplikat dari spam lama
+                                ->get();
 
         return view('monitoring', compact('antrianUser', 'sisaAntrian', 'nomorDilayaniText', 'daftarAntrian'));
     }

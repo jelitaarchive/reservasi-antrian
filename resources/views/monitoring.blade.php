@@ -7,38 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
-<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased"
-      x-data="{
-          userId: '{{ Auth::user()->id ?? 'guest' }}',
-          daftarAntrian: [],
-          antrianUser: null,
-          sisaAntrian: 0,
-          nomorDilayaniText: 'A-01',
-          init() {
-              // Fetch data dari localStorage yang disimpan oleh halaman tambah-antrian
-              let dataLokal = localStorage.getItem('daftar_antrian_lokal');
-              if (dataLokal) {
-                  this.daftarAntrian = JSON.parse(dataLokal);
-                  
-                  // Cari antrian terbaru khusus milik user yang sedang login
-                  let antrianSaya = this.daftarAntrian.filter(item => item.userId === this.userId);
-                  if (antrianSaya.length > 0) {
-                      this.antrianUser = antrianSaya[antrianSaya.length - 1]; // ambil yang paling baru diambil
-                  }
-              }
-
-              // Hitung sisa antrian (simulasi: jumlah seluruh antrian menunggu di list)
-              let menunggu = this.daftarAntrian.filter(item => item.status === 'menunggu');
-              this.sisaAntrian = menunggu.length;
-
-              // Ambil antrian pertama dari list sebagai nomor yang sedang dilayani (jika ada)
-              if (this.daftarAntrian.length > 0) {
-                  this.nomorDilayaniText = this.daftarAntrian[0].nomor_antrian;
-              } else {
-                  this.nomorDilayaniText = '-';
-              }
-          }
-      }">
+<body class="bg-[#F5F5F5] font-sans text-gray-800 antialiased">
 
     <div class="flex min-h-screen">
         
@@ -96,63 +65,90 @@
                     </a>
                 </div>
 
-                <!-- Bagian Informasi Nomor Antrian Aktif User -->
                 <div class="bg-gray-800 rounded-[32px] p-8 text-white shadow-lg mb-6">
                     <div class="flex justify-between items-start mb-12">
                         <div>
                             <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Kategori Pelayanan</p>
-                            <h3 class="text-lg font-bold" x-text="antrianUser ? antrianUser.kategori_layanan : 'Belum Ada Antrian'"></h3>
+                            <h3 class="text-lg font-bold">
+                                {{ $antrianUser ? $antrianUser->kategori_layanan : 'Belum Ada Antrian' }}
+                            </h3>
                         </div>
                         <div class="text-right">
                             <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Waktu Pelayanan</p>
-                            <p class="text-sm font-medium" x-text="antrianUser ? antrianUser.waktu_layanan : '-'"></p>
+                            <p class="text-sm font-medium">
+                                {{ $antrianUser ? $antrianUser->waktu_layanan : '-' }}
+                            </p>
                         </div>
                     </div>
                     <div class="text-center">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Nomor Antrian Anda</p>
-                        <h1 class="text-7xl font-black tracking-tighter" x-text="antrianUser ? antrianUser.nomor_antrian : '-'"></h1>
+                        <h1 class="text-7xl font-black tracking-tighter">
+                            {{ $antrianUser ? $antrianUser->nomor_antrian : '-' }}
+                        </h1>
+                        @if($antrianUser)
+                            <div class="mt-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    Status: {{ $antrianUser->status }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Bagian Grid Sisa & Nomor yang Sedang Dilayani -->
                 <div class="grid grid-cols-2 gap-6 mb-10">
                     <div class="bg-white border border-gray-200 rounded-[32px] p-8 text-center shadow-sm">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Sisa Antrian</p>
-                        <h2 class="text-4xl font-bold text-gray-800" x-text="sisaAntrian"></h2>
+                        <h2 class="text-4xl font-bold text-gray-800">
+                            {{ $antrianUser ? $sisaAntrian : '0' }} <span class="text-xs font-normal text-gray-400">orang</span>
+                        </h2>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-[32px] p-8 text-center shadow-sm">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Nomor Antrian yang Sedang Dilayani</p>
-                        <h2 class="text-4xl font-bold text-gray-800" x-text="nomorDilayaniText"></h2>
+                        <h2 class="text-4xl font-bold text-blue-600">
+                            {{ $nomorDilayaniText }}
+                        </h2>
                     </div>
                 </div>
 
-                <!-- Bagian Daftar Seluruh Antrian Hari Ini -->
                 <div class="bg-white border border-gray-200 rounded-[32px] p-8 shadow-sm">
-                    <h3 class="text-base font-bold text-gray-800 mb-6">Daftar Antrian Hari Ini</h3>
-                    <div class="space-y-6">
-                        <!-- Looping menggunakan x-for Alpine.js -->
-                        <template x-for="(item, index) in daftarAntrian" :key="index">
-                            <div class="flex items-center space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-base font-bold text-gray-800">Daftar Antrian Hari Ini</h3>
+                        <span class="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full">
+                            {{ $daftarAntrian->count() }} Aktif
+                        </span>
+                    </div>
+
+                    <div class="space-y-6 max-h-80 overflow-y-auto pr-1">
+                        @forelse($daftarAntrian as $item)
+                            <div class="flex items-center space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0 p-2 rounded-2xl transition {{ $antrianUser && $item->id === $antrianUser->id ? 'bg-blue-50/50 border border-blue-200' : '' }}">
                                 <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
                                     <span class="material-icons-outlined text-gray-400">account_circle</span>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="font-bold text-sm">
-                                        <span x-text="item.nama"></span> 
-                                        (<span x-text="item.nomor_antrian"></span>)
+                                    <p class="font-bold text-sm text-gray-800">
+                                        {{-- Samarkan nama jika itu milik mahasiswa lain --}}
+                                        {{ $antrianUser && $item->id === $antrianUser->id ? $item->nama : 'Mahasiswa (' . substr($item->nim, -4) . ')' }}
+                                        <span class="text-gray-900 font-black pl-1">[{{ $item->nomor_antrian }}]</span>
                                     </p>
-                                    <p class="text-[10px] text-gray-400" x-text="item.kategori_layanan"></p>
+                                    <p class="text-[10px] text-gray-400">{{ $item->jenis_layanan }} • {{ $item->kategori_layanan }}</p>
                                 </div>
                                 <div>
-                                    <span class="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-600 font-semibold uppercase" x-text="item.status"></span>
+                                    @if($item->status === 'melayani')
+                                        <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700 border border-yellow-200 font-semibold uppercase animate-pulse">
+                                            Sedang Dilayani
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-semibold uppercase">
+                                            Menunggu
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
-                        </template>
-
-                        <!-- Kondisi jika data kosong -->
-                        <div x-show="daftarAntrian.length === 0">
-                            <p class="text-sm text-gray-400 text-center py-4">Belum ada daftar antrian lain hari ini.</p>
-                        </div>
+                        @empty
+                            <div>
+                                <p class="text-sm text-gray-400 text-center py-4">Belum ada daftar antrian lain hari ini.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 
