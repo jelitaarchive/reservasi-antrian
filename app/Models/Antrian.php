@@ -11,6 +11,7 @@ class Antrian extends Model
 
     protected $table = 'antrians';
     protected $fillable = [
+<<<<<<< HEAD
         'nama',
         'nim',
         'email',
@@ -23,6 +24,34 @@ class Antrian extends Model
         'status',
         'dokumen',
     ];
+=======
+
+'nama',
+
+'nim',
+
+'email',
+
+'whatsapp',
+
+'jenis_layanan',
+
+'kategori_layanan',
+
+'metode_pembayaran',
+
+'waktu_layanan',
+
+'nomor_antrian',
+
+'tanggal_antrian',
+
+'status',
+
+'bukti_transfer'
+
+];
+>>>>>>> bfd8538b2193fc39ce995d9ff3121e16850c2355
 
     // Relasi ke User (opsional, untuk dipanggil di blade jika dibutuhkan)
     public function user()
