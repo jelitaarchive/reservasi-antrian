@@ -33,7 +33,14 @@ class AntreanController extends Controller
             'kategori_layanan' => 'required',
             'waktu_layanan' => 'required',
             'nomor_antrian' => 'required',
+            'dokumen' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        $pathDokumen = null;
+        if ($request->hasFile('dokumen')) {
+            // Menyimpan file ke dalam folder: storage/app/public/dokumen_antrian
+            $pathDokumen = $request->file('dokumen')->store('dokumen_antrian', 'public');
+        }
 
         $user = Auth::user();
         $hariIni = Carbon::today()->toDateString();
@@ -64,6 +71,7 @@ class AntreanController extends Controller
             'nomor_antrian'    => $request->nomor_antrian,
             'tanggal_antrian'  => $hariIni,
             'status'           => 'menunggu', // Status default awal masuk database
+            'dokumen'          => $request->file('dokumen'),
         ]);
 
         return redirect()->route('monitoring.antrian')->with('success', 'Antrian berhasil ditambahkan!');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Antrian; // FIX: Sekarang mengarah ke Model Antrian.php kamu yang pakai "i"
 use Illuminate\Http\Request;
+use App\Models\QueueHistory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
 class AdminDashboardController extends Controller
@@ -66,33 +68,42 @@ class AdminDashboardController extends Controller
 
     public function updateStatus($id, $status)
     {
-        // Validasi agar status yang dimasukkan tidak ngawur
         $statusValid = ['menunggu', 'melayani', 'selesai', 'batal'];
         if (!in_array($status, $statusValid)) {
             return redirect()->back()->with('error', 'Status tidak valid.');
         }
 
-        // Cari data antrian berdasarkan ID
         $antrian = Antrian::findOrFail($id);
 
-        // Jika admin menekan tombol panggil ('melayani'), 
-        // opsional: ubah antrian lain yang masih 'melayani' di loket tersebut menjadi 'selesai'
         if ($status === 'melayani') {
             Antrian::where('status', 'melayani')
                 ->where('jenis_layanan', $antrian->jenis_layanan)
                 ->update(['status' => 'selesai']);
         }
 
-        // Update status antrian ini
+        // Update status di tabel utama antrian
         $antrian->status = $status;
         $antrian->save();
 
-        // Siapkan pesan notifikasi yang manis untuk flash message
-        $pesan = 'Status antrian ' . $antrian->nomor_antrian . ' berhasil diperbarui ';
-        if ($status === 'melayani') $pesan .= 'menjadi Sedang Dilayani.';
-        if ($status === 'selesai') $pesan .= 'menjadi Selesai.';
-        if ($status === 'batal') $pesan .= 'dan telah Dibatalkan.';
+        // Jika status diubah ke 'selesai' atau 'batal', masukkan ke queue_histories
+        if (in_array($status, ['selesai', 'batal'])) {
+            
+            $user = DB::table('users')->where('nim', $antrian->nim)->first();
+            $userId = $user ? $user->id : null;
 
+            QueueHistory::create([
+                'user_id'     => $userId,
+                'title'       => $antrian->jenis_layanan ?? 'Pelayanan Kampus',
+                'status'      => $status, // <--- SEKARANG STATUSNYA SUDAH DICATAT ('selesai' atau 'batal')
+                'date'        => now()->toDateString(), 
+                'start_time'  => $antrian->created_at ? $antrian->created_at->toTimeString() : now()->toTimeString(), 
+                'end_time'    => now()->toTimeString(), 
+                'description' => $antrian->kategori_layanan ?? 'Antrean dengan nomor ' . $antrian->nomor_antrian . ' status: ' . $status,
+                'dokumen'     => $antrian->dokumen,
+            ]);
+        }
+
+        $pesan = 'Status antrian ' . $antrian->nomor_antrian . ' berhasil diperbarui.';
         return redirect()->back()->with('success', $pesan);
     }
 

@@ -284,7 +284,7 @@
                                         <p class="text-[10px] text-gray-400 mt-1">Klik lagi untuk menambah file .pdf lainnya</p>
                                     </div>
 
-                                    <input type="file" id="berkas" name="berkas[]" required multiple accept=".pdf" class="hidden" @change="handleFiles($event)" />
+                                    <input type="file" id="dokumen" name="dokumen" required accept=".pdf" class="hidden" @change="handleFiles($event)" />
                                 </label>
                             </div>
 

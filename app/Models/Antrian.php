@@ -21,6 +21,7 @@ class Antrian extends Model
         'nomor_antrian',
         'tanggal_antrian',
         'status',
+        'dokumen',
     ];
 
     // Relasi ke User (opsional, untuk dipanggil di blade jika dibutuhkan)
