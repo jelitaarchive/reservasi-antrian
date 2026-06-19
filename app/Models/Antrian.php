@@ -11,17 +11,32 @@ class Antrian extends Model
 
     // Ini kunci utamanya! Semua kolom wajib didaftarkan di sini agar diizinkan masuk ke DB
     protected $fillable = [
-        'nama',
-        'nim',
-        'email',
-        'whatsapp',
-        'jenis_layanan',
-        'kategori_layanan',
-        'waktu_layanan',
-        'nomor_antrian',
-        'tanggal_antrian',
-        'status',
-    ];
+
+'nama',
+
+'nim',
+
+'email',
+
+'whatsapp',
+
+'jenis_layanan',
+
+'kategori_layanan',
+
+'metode_pembayaran',
+
+'waktu_layanan',
+
+'nomor_antrian',
+
+'tanggal_antrian',
+
+'status',
+
+'bukti_transfer'
+
+];
 
     // Relasi ke User (opsional, untuk dipanggil di blade jika dibutuhkan)
     public function user()
