@@ -10,115 +10,109 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdministrasiController;
-
+use App\Http\Controllers\AdminDashboardController;
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
     return view('welcome');
 });
 
-// ==========================================
-// GRUP AKSES BERDASARKAN ROLE (MIDDLEWARE)
-// ==========================================
+// ========================================================
+// GRUP AKSES KHUSUS ADMIN (Hanya Bisa Diakses Jika Role = admin)
+// ========================================================
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Dashboard Utama Admin
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // Kelola Antrian
+    Route::get('/admin/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
 
-// MAHASISWA
-Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
-    Route::get('/mahasiswa/dashboard', function () {
-        return view('dashboard');
-    });
+    // Edit Profil Khusus Admin (resources/views/admin/profil.blade.php)
+    Route::get('/admin/profile', function () {
+        return view('admin.profil-admin'); 
+    })->name('admin.profile.edit');
 });
 
-// ADMINISTRASI
-Route::middleware(['auth', 'role:administrasi'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    });
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    // Jalur halaman kelola utama
+    Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
+    
+    // Jalur aksi ubah status (Panggil, Selesai, Batal)
+    Route::patch('/antrian/{id}/status/{status}', [AdminDashboardController::class, 'updateStatus'])->name('admin.antrian.update-status');
+    
+    // Jalur aksi hapus permanen data
+    Route::delete('/antrian/{id}/delete', [AdminDashboardController::class, 'destroy'])->name('admin.antrian.destroy');
 });
 
-// SISTEM
+// ========================================================
+// GRUP AKSES KHUSUS SISTEM (Hanya Bisa Diakses Jika Role = sistem)
+// ========================================================
 Route::middleware(['auth', 'role:sistem'])->group(function () {
     Route::get('/sistem/dashboard', function () {
         return view('sistem.dashboard');
     });
 });
 
-
-// ==========================================
-// GRUP AKSES UMUM (YANG PENTING SUDAH LOGIN)
-// ==========================================
+// ========================================================
+// GRUP AKSES UMUM & MAHASISWA (Wajib Login)
+// ========================================================
 Route::middleware(['auth'])->group(function () {
     
-    // Dashboard Utama
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Pintu Utama Setelah Login (Dicek dinamis oleh DashboardController untuk membagi role)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Halaman Alur Beranda Layanan
+    // Halaman Alur Beranda Layanan Mahasiswa
     Route::get('/pembayaran', function () {
         return view('pembayaran');
     })->name('pembayaran');
 
-    Route::get('/administrasi', function () {
-        return view('administrasi');
-    })->name('administrasi');
+    // Layanan Administrasi Akademik Mahasiswa
+    Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
 
-    // Fitur Tambah Antrian
+    // Fitur Tambah Antrian Mahasiswa
     Route::get('/tambah-antrian', function () {
         return view('tambah-antrian'); 
     })->name('tambah.antrian');
 
-    // Fitur Monitoring Antrian (Halaman Baru)
+    // Fitur Monitoring Antrian 
     Route::get('/monitoring-antrian', [AntreanController::class, 'monitoring'])->name('monitoring.antrian');
 
-    // Fitur Riwayat Antrian (Disinkronkan ke name: riwayat.antrian)
+    // Fitur Riwayat Antrian
     Route::get('/riwayat-antrian', [QueueHistoryController::class, 'index'])->name('riwayat.antrian');
 
-    // Manajemen Akun / Profil Saya
+    // Manajemen Akun / Profil Saya (Khusus Mahasiswa -> resources/views/profil.blade.php)
     Route::get('/profile', function () {
-        return view('profil'); // Mengarah ke resources/views/profil.blade.php
+        return view('profil'); 
     })->name('profile.edit');
 
+    // Proses Update dan Delete Profil (Dipakai Bersama lewat Request Handler)
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Form Submission Antrian
     Route::post('/tambah-antrian', [AntreanController::class, 'store'])->name('tambah.antrian.store');
     Route::post('/antrian/store', [AntreanController::class, 'store'])->name('antrian.store');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/administrasi', [AdministrasiController::class, 'index'])->name('administrasi');
-    // 1. Halaman minta link / input email reset (Halaman pertama)
+    
+    // Fitur Lupa Password & Verifikasi OTP via WhatsApp / SMS
+    // 1. Halaman minta link / input email reset
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
 
-    // 2. Tampilkan halaman form input OTP figma kamu ini
+    // 2. Tampilkan halaman form input OTP
     Route::get('/forgot-password/otp', [PasswordResetLinkController::class, 'showOtpForm'])->name('password.otp.form');
 
     // 3. Proses verifikasi OTP saat tombol "Verifikasi Kode" diklik
     Route::post('/forgot-password/verify-otp', [PasswordResetLinkController::class, 'resetPasswordWithOtp'])->name('password.verify_otp');
-
 });
 
+// ========================================================
+// RUTE DI LUAR AUTHENTICATION (RESET PASSWORD LAWAN OTP)
+// ========================================================
 Route::get('/reset-password', function() {
     return view('auth.reset-password');
 })->name('password.reset');
 
-// Proses simpan password barunya
+// Proses simpan password baru
 Route::post('/reset-password/save', [ForgotPasswordController::class, 'resetPassword'])->name('password.update_custom');
-
-// // Route::get('/test-whatsapp-api', function() {
-    // Tentukan nomor tujuan (Gunakan nomor HP kamu sendiri untuk uji coba)
-    //$nomorTujuan = '6281234567890'; // Sesuaikan nomor HP-mu!
-    
-    // Format teks menggunakan Markdown WhatsApp agar terlihat profesional
-    //$isiPesan = "⭐ *SISTEM NOTIFIKASI ANTRE.in* ⭐\n\nHalo Bubb!\n\nJika kamu menerima pesan ini, selamat! Integrasi *WhatsApp API Gateway (Fonnte)* pada project Laravel kamu telah *BERHASIL* terpasang 100%.\n\nReady untuk lanjut ke fitur OTP dan Antrian! 🚀🔥";
-
-    // Panggil fungsi static yang sudah kita buat tadi
-    //$hasil = WhatsAppController::sendMessage($nomorTujuan, $isiPesan);
-
-    // Tampilkan hasilnya di browser
-    //return response()->json([
-        //'keterangan' => 'Status pengiriman dari server lokal:',
-        //'response_fonnte' => $hasil
-    //]);
-//});
-
 
 // Load file routing bawaan Laravel Breeze / Jetstream (Login, Register, dll)
 require __DIR__.'/auth.php';

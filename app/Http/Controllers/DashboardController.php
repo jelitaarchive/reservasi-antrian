@@ -9,6 +9,13 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            return view('admin.dashboard');
+        }
+
+        // 3. JIKA USER ADALAH MAHASISWA -> Jalankan Logika Lama Kamu
         $search = $request->query('search'); // Mengambil input 'search' dari URL
         
         $layanans = [
@@ -22,7 +29,7 @@ class DashboardController extends Controller
                                 ->unique('email')
                                 ->take(4);
 
-        // Kirimkan variabel $daftarAntrian bersama dengan $layanans dan $search ke view dashboard
+        // Kirimkan variabel ke view dashboard milik mahasiswa
         return view('dashboard', compact('layanans', 'search', 'daftarAntrian'));
     }
 }

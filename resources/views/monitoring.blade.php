@@ -69,48 +69,85 @@
                     <div class="flex justify-between items-start mb-12">
                         <div>
                             <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Kategori Pelayanan</p>
-                            <h3 class="text-lg font-bold">{{ $antrianUser->kategori_layanan ?? 'Belum Ada Antrian' }}</h3>
+                            <h3 class="text-lg font-bold">
+                                {{ $antrianUser ? $antrianUser->kategori_layanan : 'Belum Ada Antrian' }}
+                            </h3>
                         </div>
                         <div class="text-right">
                             <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Waktu Pelayanan</p>
-                            <p class="text-sm font-medium">{{ $antrianUser->waktu_layanan ?? '-' }}</p>
+                            <p class="text-sm font-medium">
+                                {{ $antrianUser ? $antrianUser->waktu_layanan : '-' }}
+                            </p>
                         </div>
                     </div>
                     <div class="text-center">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Nomor Antrian Anda</p>
-                        <h1 class="text-7xl font-black tracking-tighter">{{ $antrianUser->nomor_antrian ?? '-' }}</h1>
+                        <h1 class="text-7xl font-black tracking-tighter">
+                            {{ $antrianUser ? $antrianUser->nomor_antrian : '-' }}
+                        </h1>
+                        @if($antrianUser)
+                            <div class="mt-4">
+                                <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    Status: {{ $antrianUser->status }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-6 mb-10">
                     <div class="bg-white border border-gray-200 rounded-[32px] p-8 text-center shadow-sm">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Sisa Antrian</p>
-                        <h2 class="text-4xl font-bold text-gray-800">{{ $sisaAntrian ?? 0 }}</h2>
+                        <h2 class="text-4xl font-bold text-gray-800">
+                            {{ $antrianUser ? $sisaAntrian : '0' }} <span class="text-xs font-normal text-gray-400">orang</span>
+                        </h2>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-[32px] p-8 text-center shadow-sm">
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Nomor Antrian yang Sedang Dilayani</p>
-                        <h2 class="text-4xl font-bold text-gray-800">{{ $nomorDilayaniText }}</h2>
+                        <h2 class="text-4xl font-bold text-blue-600">
+                            {{ $nomorDilayaniText }}
+                        </h2>
                     </div>
                 </div>
 
                 <div class="bg-white border border-gray-200 rounded-[32px] p-8 shadow-sm">
-                    <h3 class="text-base font-bold text-gray-800 mb-6">Daftar Antrian Hari Ini</h3>
-                    <div class="space-y-6">
-                        @forelse ($daftarAntrian as $key => $item)
-                        <div class="flex items-center space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                                <span class="material-icons-outlined text-gray-400">account_circle</span>
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-base font-bold text-gray-800">Daftar Antrian Hari Ini</h3>
+                        <span class="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full">
+                            {{ $daftarAntrian->count() }} Aktif
+                        </span>
+                    </div>
+
+                    <div class="space-y-6 max-h-80 overflow-y-auto pr-1">
+                        @forelse($daftarAntrian as $item)
+                            <div class="flex items-center space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0 p-2 rounded-2xl transition {{ $antrianUser && $item->id === $antrianUser->id ? 'bg-blue-50/50 border border-blue-200' : '' }}">
+                                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="material-icons-outlined text-gray-400">account_circle</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-sm text-gray-800">
+                                        {{-- Samarkan nama jika itu milik mahasiswa lain --}}
+                                        {{ $antrianUser && $item->id === $antrianUser->id ? $item->nama : 'Mahasiswa (' . substr($item->nim, -4) . ')' }}
+                                        <span class="text-gray-900 font-black pl-1">[{{ $item->nomor_antrian }}]</span>
+                                    </p>
+                                    <p class="text-[10px] text-gray-400">{{ $item->jenis_layanan }} • {{ $item->kategori_layanan }}</p>
+                                </div>
+                                <div>
+                                    @if($item->status === 'melayani')
+                                        <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700 border border-yellow-200 font-semibold uppercase animate-pulse">
+                                            Sedang Dilayani
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-semibold uppercase">
+                                            Menunggu
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="flex-1">
-                                <p class="font-bold text-sm">{{ $item->nama }} ({{ $item->nomor_antrian }})</p>
-                                <p class="text-[10px] text-gray-400">{{ $item->kategori_layanan }}</p>
-                            </div>
-                            <div>
-                                <span class="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-600 font-semibold uppercase">{{ $item->status }}</span>
-                            </div>
-                        </div>
                         @empty
-                        <p class="text-sm text-gray-400 text-center py-4">Belum ada daftar antrian lain hari ini.</p>
+                            <div>
+                                <p class="text-sm text-gray-400 text-center py-4">Belum ada daftar antrian lain hari ini.</p>
+                            </div>
                         @endforelse
                     </div>
                 </div>

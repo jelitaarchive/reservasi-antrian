@@ -19,30 +19,24 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Cek apakah user yang login memiliki role admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard'); 
+        }
+
+        // Jika bukan admin (mahasiswa), lempar ke dashboard biasa
+        return redirect()->route('');
+    }
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        // Mengarahkan mahasiswa langsung ke /dashboard utama (desain figma)
-        if (auth()->user()->role == 'mahasiswa') {
-
-            return redirect('/dashboard');
-
-        } elseif (auth()->user()->role == 'administrasi') {
-
-            return redirect('/admin/dashboard');
-
-        } elseif (auth()->user()->role == 'sistem') {
-
-            return redirect('/sistem/dashboard');
-        }
-
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     /**
