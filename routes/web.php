@@ -11,6 +11,10 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdministrasiController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminLayananController;
+use App\Http\Controllers\AdminMahasiswaController;
+use App\Http\Controllers\AdminVerifikasiController;
+use App\Http\Controllers\AdminMonitoringController;
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
@@ -18,30 +22,40 @@ Route::get('/', function () {
 });
 
 // ========================================================
-// GRUP AKSES KHUSUS ADMIN (Hanya Bisa Diakses Jika Role = admin)
+// GRUP AKSES KHUSUS ADMIN (Prefix: /admin)
 // ========================================================
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    // Dashboard Utama Admin
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    
-    // Kelola Antrian
-    Route::get('/admin/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
-
-    // Edit Profil Khusus Admin (resources/views/admin/profil.blade.php)
-    Route::get('/admin/profile', function () {
-        return view('admin.profil-admin'); 
-    })->name('admin.profile.edit');
-});
-
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    // Jalur halaman kelola utama
+    
+    // 1. Dashboard Utama Admin -> Jalur: /admin/dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // 2. Kelola Antrian -> Jalur: /admin/kelola-antrian
     Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
     
-    // Jalur aksi ubah status (Panggil, Selesai, Batal)
-    Route::patch('/antrian/{id}/status/{status}', [AdminDashboardController::class, 'updateStatus'])->name('admin.antrian.update-status');
+    // 3. Kelola Layanan -> Jalur: /admin/kelola-layanan
+    Route::get('/kelola-layanan', [AdminLayananController::class, 'index'])->name('admin.kelola.layanan');
     
-    // Jalur aksi hapus permanen data
+    // 4. Edit Profil Khusus Admin -> Jalur: /admin/profile
+    Route::get('/profile', function () {
+        return view('admin.profil-admin'); 
+    })->name('admin.profile.edit');
+
+    // 5. Aksi Antrian (Ubah Status & Hapus) -> Jalur: /admin/antrian/...
+    Route::patch('/antrian/{id}/status/{status}', [AdminDashboardController::class, 'updateStatus'])->name('admin.antrian.update-status');
     Route::delete('/antrian/{id}/delete', [AdminDashboardController::class, 'destroy'])->name('admin.antrian.destroy');
+
+    // 6. Kelola Mahasiswa
+    Route::get('/kelola-mahasiswa', [AdminMahasiswaController::class, 'index'])->name('admin.kelola.mahasiswa');
+    Route::delete('/kelola-mahasiswa/{nim}/delete', [AdminMahasiswaController::class, 'destroy'])->name('admin.mahasiswa.destroy');
+
+    // 7. Verifikasi Berkas
+    Route::get('/verifikasi-berkas', [AdminVerifikasiController::class, 'index'])->name('admin.verifikasi.berkas');
+    Route::patch('/verifikasi-berkas/{id}/update-status', [AdminVerifikasiController::class, 'updateStatus'])->name('admin.verifikasi.update');
+
+    // 8. Monitoring Antrian
+    Route::get('/monitoring-antrian', [AdminMonitoringController::class, 'index'])->name('admin.monitoring');
+    Route::post('/monitoring-antrian/panggil', [AdminMonitoringController::class, 'panggilBerikutnya'])->name('admin.monitoring.panggil');
+    
 });
 
 // ========================================================

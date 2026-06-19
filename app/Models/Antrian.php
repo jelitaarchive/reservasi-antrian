@@ -33,4 +33,12 @@ class Antrian extends Model
     {
         return $this->belongsTo(User::class, 'email', 'email');
     }
+
+    public function scopeMenunggu($query) {
+    return $query->where('status', 'Menunggu');
+    }
+
+    public function scopeDiproses($query) {
+        return $query->where('status', 'Diproses');
+    }
 }

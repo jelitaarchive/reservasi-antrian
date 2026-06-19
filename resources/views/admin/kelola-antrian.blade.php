@@ -30,29 +30,29 @@
                 </div>
                 
                 <nav class="space-y-1">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">home</span>
+                        <span class="text-sm font-medium">Dashboard</span>
+                    </a>
+                    
                     <div class="relative flex items-center bg-gray-800 rounded-xl mb-4">
-                        <a href="#" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
-                            <span class="material-icons-outlined text-xl text-white">home</span>
-                            <span class="text-sm">Dashboard</span>
+                        <a href="{{ route('admin.kelola.antrian') }}" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
+                            <span class="material-icons-outlined text-xl text-white">dashboard</span>
+                            <span class="text-sm">Kelola Antrian</span>
                         </a>
                     </div>
                     
-                    <a href="{{ route('admin.kelola.antrian') }}" class="flex items-center space-x-3 text-gray-900 font-bold p-3">
-                        <span class="material-icons-outlined text-xl text-black">dashboard</span>
-                        <span class="text-sm">Kelola Antrian</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola.layanan') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">headset_mic</span>
                         <span class="font-medium text-sm">Kelola Layanan</span>
                     </a>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola.mahasiswa') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">people_outline</span>
                         <span class="font-medium text-sm">Kelola Mahasiswa</span>
                     </a>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.verifikasi.berkas') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">description</span>
                         <span class="font-medium text-sm">Verifikasi Berkas</span>
                     </a>
@@ -67,9 +67,9 @@
                         <span class="font-medium text-sm">Laporan PDF</span>
                     </a>
 
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.monitoring') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">insert_chart_outlined</span>
-                        <span class="font-medium text-sm">Statistik</span>
+                        <span class="font-medium text-sm">Monitoring Antrian</span>
                     </a>
 
                     <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">

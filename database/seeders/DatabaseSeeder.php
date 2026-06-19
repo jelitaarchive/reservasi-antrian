@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@kampus.ac.id',
             'password' => Hash::make('password123'),
+            'role' => 'admin',
         ]);
 
         // Membuat akun Mahasiswa Dummy
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Mahasiswa',
             'email' => 'mahasiswa@mahasiswa.ac.id',
             'password' => Hash::make('password123'),
+            'role' => 'mahasiswa',
         ]);
     }
 }
