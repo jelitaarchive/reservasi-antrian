@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\AntrianController;
 
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -42,14 +41,23 @@ Route::get('/test-pembayaran', function () {
     ]);
 });
 
-Route::post(
-'/antrian',
-[AntrianController::class,'store']
-);
+// ==========================================
+// ROUTE UNTUK MAHASISWA (Sudah Ada)
+// ==========================================
+Route::post('/antrian', [AntrianController::class, 'store']);
+Route::get('/riwayat/{nim}', [AntrianController::class, 'riwayat']);
 
+// ==========================================
+// ROUTE TAMBAHAN UNTUK CRUD ADMIN (Wajib Ditambahkan)
+// ==========================================
+// 1. Admin GET semua antrian dari seluruh mahasiswa
+Route::get('/antrian', [AntrianController::class, 'index']);
 
-Route::get(
-'/riwayat/{nim}',
-[AntrianController::class,'riwayat']
-);
+// 2. Admin GET detail satu data antrian berdasarkan ID
+Route::get('/antrian/{id}', [AntrianController::class, 'show']);
 
+// 3. Admin UPDATE status antrian (misal: panggil, proses, selesai) berdasarkan ID
+Route::put('/antrian/{id}', [AntrianController::class, 'update']);
+
+// 4. Admin DELETE / hapus data antrian berdasarkan ID
+Route::delete('/antrian/{id}', [AntrianController::class, 'destroy']);
