@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ApiAntreanController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Auth\ApiAuthController;
@@ -9,15 +10,13 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\AntrianController;
+use App\Http\Controllers\MidtransController;
 
-<<<<<<< HEAD
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/antrian/store', [ApiAntreanController::class, 'storeFromApi']);
     
 });
 
-=======
->>>>>>> 1c7a9390b717f0b5e2e5ef7fff88bc9201a249ad
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -46,6 +45,8 @@ Route::post(
 
 Route::post('/pembayaran', [PembayaranController::class, 'store']);
 
+Route::post('/tambah-antrian-mobile', [AdminDashboardController::class, 'storeAntrianFromMobile']);
+
 Route::get('/test-pembayaran', function () {
     return response()->json([
         'status' => 'API Pembayaran Aktif'
@@ -67,7 +68,6 @@ Route::get('/antrian', [AntrianController::class, 'index']);
 // 2. Admin GET detail satu data antrian berdasarkan ID
 Route::get('/antrian/{id}', [AntrianController::class, 'show']);
 
-<<<<<<< HEAD
 // Endpoint Login Mahasiswa dari Flutter
 Route::post('/login-mahasiswa', [ApiAuthController::class, 'login']);
 
@@ -98,10 +98,15 @@ Route::prefix('antrian')->group(function () {
     Route::delete('/delete/{id}', [ApiAntreanController::class, 'destroy']);
     
 });
-=======
+
 // 3. Admin UPDATE status antrian (misal: panggil, proses, selesai) berdasarkan ID
 Route::put('/antrian/{id}', [AntrianController::class, 'update']);
 
 // 4. Admin DELETE / hapus data antrian berdasarkan ID
 Route::delete('/antrian/{id}', [AntrianController::class, 'destroy']);
->>>>>>> 1c7a9390b717f0b5e2e5ef7fff88bc9201a249ad
+
+// Route untuk Flutter meminta link pembayaran
+Route::post('/midtrans/buat-transaksi', [MidtransController::class, 'buatTransaksi']);
+
+// Route untuk Webhook Midtrans (Jangan dikunci pakai auth token)
+Route::post('/midtrans/callback', [MidtransController::class, 'callbackMidtrans']);
