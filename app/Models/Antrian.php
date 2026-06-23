@@ -13,21 +13,30 @@ class Antrian extends Model
     protected $table = 'antrians';
 
     protected $fillable = [
-        'nama',
-        'nim',
-        'email',
-        'whatsapp',
-        'jenis_layanan',
-        'kategori_layanan',
-        'metode_pembayaran',
-        'waktu_layanan',
-        'nomor_antrian',
-        'tanggal_antrian',
-        'status',
-        'dokumen',
-        'bukti_transfer',
-    ];
 
+    'nama',
+    'nim',
+    'email',
+    'whatsapp',
+
+    'jenis_layanan',
+    'kategori_layanan',
+
+    'metode_pembayaran',
+    'waktu_layanan',
+
+    'nomor_antrian',
+    'tanggal_antrian',
+
+    'status',
+    'dokumen',
+    'bukti_transfer',
+
+    'order_id',
+    'snap_token',
+    'transaction_status'
+
+    ];
     // Relasi ke User (berdasarkan email)
     public function user()
     {

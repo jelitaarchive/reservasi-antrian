@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\AntrianController;
-
+use App\Http\Controllers\Api\MidtransController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -45,6 +45,16 @@ Route::get('/test-pembayaran', function () {
 Route::post(
 '/antrian',
 [AntrianController::class,'store']
+);
+
+Route::post(
+
+'/midtrans/{id}',
+
+[MidtransController::class,
+
+'create']
+
 );
 
 
