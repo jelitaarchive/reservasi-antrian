@@ -33,7 +33,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
     
     // 3. Kelola Layanan -> Jalur: /admin/kelola-layanan
-    Route::get('/kelola-layanan', [AdminLayananController::class, 'index'])->name('admin.kelola.layanan');
+    Route::get('/kelola-layanan', [AdminDashboardController::class, 'kelolaLayanan'])->name('admin.kelola.layanan');
     
     // 4. Edit Profil Khusus Admin -> Jalur: /admin/profile
     Route::get('/profile', function () {
@@ -57,6 +57,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/monitoring-antrian/panggil', [AdminMonitoringController::class, 'panggilBerikutnya'])->name('admin.monitoring.panggil');
     
 });
+
+Route::get('/admin/kelola-layanan', [AdminLayananController::class, 'index'])->name('admin.kelola-layanan');
+Route::post('/admin/kelola-layanan', [AdminLayananController::class, 'store'])->name('admin.layanan-store');
 
 // ========================================================
 // GRUP AKSES KHUSUS SISTEM (Hanya Bisa Diakses Jika Role = sistem)

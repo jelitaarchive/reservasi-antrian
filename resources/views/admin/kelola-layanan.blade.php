@@ -30,15 +30,13 @@
                         <span class="material-icons-outlined text-xl">dashboard</span>
                         <span class="font-medium text-sm">Kelola Antrian</span>
                     </a>
-                    
 
                     <div class="relative flex items-center bg-gray-800 rounded-xl mb-4">
-                        <a href="{{ route('admin.kelola.layanan') }}" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
+                        <a href="{{ route('admin.kelola-layanan') }}" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
                             <span class="material-icons-outlined text-xl text-white">headset_mic</span>
                             <span class="text-sm">Kelola Layanan</span>
                         </a>
                     </div>
-
                     
                     <a href="{{ route('admin.kelola.mahasiswa') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">people_outline</span>
@@ -92,7 +90,7 @@
                 
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-2xl font-bold text-gray-900">Kelola Layanan</h2>
-                    <button class="bg-black hover:bg-gray-800 text-white font-medium px-5 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm transition">
+                    <button onclick="openModal()" class="bg-black hover:bg-gray-800 text-white font-medium px-5 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm transition">
                         <span>+</span> Tambah Layanan
                     </button>
                 </div>
@@ -141,7 +139,77 @@
 
             </div>
         </main>
+        @if(session('success'))
+            <div id="notif" class="mb-4 p-4 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-bold transition-all">
+                {{ session('success') }}
+            </div>
+            <script>
+                setTimeout(() => { document.getElementById('notif').style.display = 'none'; }, 3000);
+            </script>
+        @endif
     </div>
+    
+    <div id="modalLayanan" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 transform transition-all">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-gray-900">Tambah Layanan Baru</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                <span class="material-icons-outlined">close</span>
+            </button>
+        </div>
 
+        <form action="{{ route('admin.layanan-store') }}" method="POST">
+            @csrf
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nama Layanan</label>
+                    <input type="text" name="nama_layanan" placeholder="Contoh: Pembayaran UKT" required
+                        class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Estimasi Waktu</label>
+                    <input type="text" name="estimasi" placeholder="Contoh: 15 Menit" required
+                        class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Status</label>
+                    <select name="status" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black transition">
+                        <option value="Aktif">Aktif</option>
+                        <option value="Nonaktif">Nonaktif</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-8 flex gap-3">
+                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition font-semibold text-sm">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 transition font-semibold text-sm">
+                    Simpan Layanan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById('modalLayanan').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modalLayanan').classList.add('hidden');
+    }
+
+    // Menutup modal jika klik di luar area modal
+    window.onclick = function(event) {
+        let modal = document.getElementById('modalLayanan');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
 </body>
 </html>

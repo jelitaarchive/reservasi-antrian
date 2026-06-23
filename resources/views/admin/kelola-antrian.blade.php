@@ -16,14 +16,6 @@
                 <div class="text-2xl font-bold tracking-wider text-gray-900 mb-6 pl-2">
                     ANTRE.in
                 </div>
-                
-                <div class="mb-6 pl-2 flex items-center space-x-3">
-                    <span class="material-icons-outlined text-3xl text-gray-600">account_circle</span>
-                    <div>
-                        <div class="text-xs font-bold text-gray-800">Halo, Admin</div>
-                        <div class="text-[10px] text-gray-500 font-medium">Petugas Administrasi</div>
-                    </div>
-                </div>
 
                 <div class="text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-4 pl-2">
                     ADMIN
