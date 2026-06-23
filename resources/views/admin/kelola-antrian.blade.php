@@ -16,43 +16,35 @@
                 <div class="text-2xl font-bold tracking-wider text-gray-900 mb-6 pl-2">
                     ANTRE.in
                 </div>
-                
-                <div class="mb-6 pl-2 flex items-center space-x-3">
-                    <span class="material-icons-outlined text-3xl text-gray-600">account_circle</span>
-                    <div>
-                        <div class="text-xs font-bold text-gray-800">Halo, Admin</div>
-                        <div class="text-[10px] text-gray-500 font-medium">Petugas Administrasi</div>
-                    </div>
-                </div>
 
                 <div class="text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-4 pl-2">
                     ADMIN
                 </div>
                 
                 <nav class="space-y-1">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                        <span class="material-icons-outlined text-xl">home</span>
+                        <span class="text-sm font-medium">Dashboard</span>
+                    </a>
+                    
                     <div class="relative flex items-center bg-gray-800 rounded-xl mb-4">
-                        <a href="#" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
-                            <span class="material-icons-outlined text-xl text-white">home</span>
-                            <span class="text-sm">Dashboard</span>
+                        <a href="{{ route('admin.kelola.antrian') }}" class="flex items-center space-x-3 text-white font-bold p-3 w-full">
+                            <span class="material-icons-outlined text-xl text-white">dashboard</span>
+                            <span class="text-sm">Kelola Antrian</span>
                         </a>
                     </div>
                     
-                    <a href="{{ route('admin.kelola.antrian') }}" class="flex items-center space-x-3 text-gray-900 font-bold p-3">
-                        <span class="material-icons-outlined text-xl text-black">dashboard</span>
-                        <span class="text-sm">Kelola Antrian</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola.layanan') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">headset_mic</span>
                         <span class="font-medium text-sm">Kelola Layanan</span>
                     </a>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola.mahasiswa') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">people_outline</span>
                         <span class="font-medium text-sm">Kelola Mahasiswa</span>
                     </a>
                     
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.verifikasi.berkas') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">description</span>
                         <span class="font-medium text-sm">Verifikasi Berkas</span>
                     </a>
@@ -67,9 +59,9 @@
                         <span class="font-medium text-sm">Laporan PDF</span>
                     </a>
 
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.monitoring') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">insert_chart_outlined</span>
-                        <span class="font-medium text-sm">Statistik</span>
+                        <span class="font-medium text-sm">Monitoring Antrian</span>
                     </a>
 
                     <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">

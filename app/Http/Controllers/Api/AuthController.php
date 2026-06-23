@@ -11,73 +11,67 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function login(Request $request)
-{
-    $request->validate([
-        'nim' => 'required',
-        'password' => 'required',
-        'role' => 'required|in:admin,mahasiswa',
-    ]);
+    {
+        $request->validate([
+            'nim' => 'required',
+            'password' => 'required',
+            'role' => 'required|in:admin,mahasiswa',
+        ]);
 
-    if (!Auth::attempt([
-        'nim' => $request->nim,
-        'password' => $request->password,
-    ])) {
+        if (!Auth::attempt([
+            'nim' => $request->nim,
+            'password' => $request->password,
+        ])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'NIM atau password salah'
+            ], 401);
+        }
+
+        $user = User::where('nim', $request->nim)->first();
+
+        if ($user->role !== $request->role) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Role tidak sesuai'
+            ], 401);
+        }
+
+        $token = $user->createToken('auth-token')->plainTextToken;
+
         return response()->json([
-            'success' => false,
-            'message' => 'NIM atau password salah'
-        ], 401);
+            'success' => true,
+            'message' => 'Login berhasil',
+            'token' => $token,
+            'user' => $user
+        ], 200);
     }
-
-    $user = User::where(
-        'nim',
-        $request->nim
-    )->first();
-
-    if ($user->role !== $request->role) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Role tidak sesuai'
-        ], 401);
-    }
-
-    $token = $user
-        ->createToken('flutter-token')
-        ->plainTextToken;
-
-    return response()->json([
-        'success' => true,
-        'token' => $token,
-        'user' => $user
-    ]);
-}
 
     public function register(Request $request)
     {
         $request->validate([
-        'name' => 'required',
-        'nim' => 'required',
-        'email' => 'required|email|unique:users,email',
-        'phone' => 'required',
-        'password' => 'required|min:6',
-        'role' => 'required|in:admin,mahasiswa',
+            'name' => 'required',
+            'nim' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required',
+            'password' => 'required|min:6',
+            'role' => 'required|in:admin,mahasiswa',
         ]);
 
         $user = User::create([
-        'name' => $request->name,
-        'nim' => $request->nim,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
+            'name' => $request->name,
+            'nim' => $request->nim,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
-        $token = $user->createToken('flutter-token')->plainTextToken;
-
+        // Ditambahkan respons JSON agar tidak blank/error saat registrasi berhasil
         return response()->json([
             'success' => true,
-            'message' => 'Register berhasil',
-            'token' => $token,
-            'user' => $user,
+            'message' => 'Registrasi berhasil silakan login',
+            'data' => $user
         ], 201);
     }
 }

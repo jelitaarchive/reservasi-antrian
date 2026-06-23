@@ -11,18 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-
     ->withMiddleware(function (Middleware $middleware) {
-
-        // Tambahkan middleware CORS
-        $middleware->append(
-            \Illuminate\Http\Middleware\HandleCors::class
-        );
+        
+        // Atur konfigurasi CORS secara global di Laravel 11
+        $middleware->validateCsrfTokens(except: [
+            'api/*', // Amankan API agar tidak terbentur token CSRF web bawaan Breeze
+        ]);
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
-
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

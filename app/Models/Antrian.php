@@ -13,6 +13,24 @@ class Antrian extends Model
     protected $table = 'antrians';
 
     protected $fillable = [
+<<<<<<< HEAD
+=======
+        'user_id',
+        'nama',
+        'nim',
+        'email',
+        'whatsapp',
+        'jenis_layanan',
+        'kategori_layanan',
+        'metode_pembayaran',
+        'waktu_layanan',
+        'nomor_antrian',
+        'tanggal_antrian',
+        'status',
+        'dokumen',
+        'bukti_transfer',
+    ];
+>>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
 
     'nama',
     'nim',
@@ -41,5 +59,13 @@ class Antrian extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    public function scopeMenunggu($query) {
+    return $query->where('status', 'Menunggu');
+    }
+
+    public function scopeDiproses($query) {
+        return $query->where('status', 'Diproses');
     }
 }
