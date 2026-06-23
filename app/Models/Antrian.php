@@ -13,6 +13,7 @@ class Antrian extends Model
     protected $table = 'antrians';
 
     protected $fillable = [
+        'user_id',
         'nama',
         'nim',
         'email',
