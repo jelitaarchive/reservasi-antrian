@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
+
 use Illuminate\Support\Facades\Http; // FIX: Diubah dari Https ke Http bawaan Laravel
-=======
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
 use App\Models\Antrian;
 use Illuminate\Http\Request;
 
 class AntrianController extends Controller
 {
-<<<<<<< HEAD
     public function store(Request $request)
     {
         // Tetap membuat antrian di database mobile seperti biasa
@@ -60,7 +57,7 @@ class AntrianController extends Controller
             ->get();
 
         return response()->json($data);
-=======
+    }
     // ==========================================
     // FUNGSI UNTUK MAHASISWA (Sudah Ada)
     // ==========================================
@@ -164,6 +161,5 @@ class AntrianController extends Controller
         return response()->json([
             'message' => 'Antrian berhasil dihapus oleh Admin'
         ], 200);
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
     }
 }

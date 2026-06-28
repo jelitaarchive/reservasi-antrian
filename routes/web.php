@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminLayananController;
 use App\Http\Controllers\AdminMahasiswaController;
 use App\Http\Controllers\AdminVerifikasiController;
 use App\Http\Controllers\AdminMonitoringController;
+use App\Http\Controllers\AdminKelolaController; // <-- Memanggil Controller Kelola Admin yang baru
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
@@ -55,6 +56,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // 8. Monitoring Antrian
     Route::get('/monitoring-antrian', [AdminMonitoringController::class, 'index'])->name('admin.monitoring');
     Route::post('/monitoring-antrian/panggil', [AdminMonitoringController::class, 'panggilBerikutnya'])->name('admin.monitoring.panggil');
+
+    // 9. Kelola Akun Admin (Fitur Baru - Integrasi Nama Route Sesuai Sidebar)
+    Route::get('/kelola-admin', [AdminKelolaController::class, 'index'])->name('admin.kelola-admin');
+    Route::post('/kelola-admin', [AdminKelolaController::class, 'store'])->name('admin.store');
+    Route::delete('/kelola-admin/{id}/delete', [AdminKelolaController::class, 'destroy'])->name('admin.destroy');
     
 });
 
