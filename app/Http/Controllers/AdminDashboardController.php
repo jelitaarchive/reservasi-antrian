@@ -23,29 +23,54 @@ class AdminDashboardController extends Controller
         ]);
     }
 
-    // Mengirim data grafik 7 hari terakhir
+    // Mengirim data grafik 7 hari terakhir (PERBAIKAN: Menggunakan Carbon::today agar grafik garis sinkron dengan total hari ini)
     public function getChartData()
     {
         $labels = []; $data = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i);
+            $date = Carbon::today()->subDays($i);
             $labels[] = $date->format('d M');
             $data[] = Antrian::whereDate('tanggal_antrian', $date->toDateString())->count();
         }
         return response()->json(['labels' => $labels, 'data' => $data]);
     }
 
-    // Mengirim data untuk donat chart
+    // Mengirim data untuk donat chart (PERBAIKAN: Menghindari Error 500 menggunakan Query Builder)
     public function getLayananData()
     {
-        $layanan = Layanan::withCount(['antrian' => function ($q) {
-            $q->whereDate('tanggal_antrian', Carbon::today());
-        }])->get();
+        try {
+            $today = Carbon::today()->toDateString();
 
-        return response()->json([
-            'labels' => $layanan->pluck('nama_layanan'),
-            'counts' => $layanan->pluck('antrian_count')
-        ]);
+            // Mengambil jumlah antrian dikelompokkan berdasarkan kolom 'jenis_layanan' hari ini
+            // Catatan: Jika nama tabel Anda di database adalah 'antrian' (tanpa 's'), ubah 'antrians' menjadi 'antrian'
+            $dataAntrian = DB::table('antrians')
+                ->select('jenis_layanan', DB::raw('count(*) as total'))
+                ->whereDate('tanggal_antrian', $today)
+                ->groupBy('jenis_layanan')
+                ->get();
+
+            // Jika hari ini belum ada antrian sama sekali, kembalikan data default agar chart tidak kosong melompong
+            if ($dataAntrian->isEmpty()) {
+                return response()->json([
+                    'labels' => ['Belum Ada Data'],
+                    'counts' => [0]
+                ]);
+            }
+
+            return response()->json([
+                'labels' => $dataAntrian->pluck('jenis_layanan'),
+                'counts' => $dataAntrian->pluck('total')
+            ]);
+
+        } catch (\Exception $e) {
+            // Jika ada error internal database, sistem mencatat log kronologinya tanpa merusak web admin
+            logger("Error pada getLayananData: " . $e->getMessage());
+            
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
     
     /**
