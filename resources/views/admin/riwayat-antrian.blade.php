@@ -240,12 +240,13 @@
                 </div>
 
 
-                <button
-                    class="bg-black text-white px-6 py-3 rounded-xl">
+                <a
+                href="{{ route('admin.riwayat.export') }}"
+                class="bg-black text-white px-6 py-3 rounded-xl inline-block">
 
-                    Export
+                Export PDF
 
-                </button>
+                </a>
 
             </div>
 
