@@ -76,6 +76,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         '/riwayat-antrian',
         [RiwayatController::class,'index']
     )->name('admin.riwayat');
+
+    Route::get(
+        '/riwayat-antrian/export',
+        [RiwayatController::class,'exportPdf']
+    )->name('admin.riwayat.export');
 });
 
 Route::get('/admin/kelola-layanan', [AdminLayananController::class, 'index'])->name('admin.kelola-layanan');
