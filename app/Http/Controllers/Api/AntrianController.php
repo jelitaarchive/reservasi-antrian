@@ -1,74 +1,41 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
-use Illuminate\Support\Facades\Http; // FIX: Diubah dari Https ke Http bawaan Laravel
-=======
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
 use App\Models\Antrian;
 use Illuminate\Http\Request;
 
 class AntrianController extends Controller
 {
-<<<<<<< HEAD
+    // ==========================================
+    // FUNGSI UNTUK MAHASISWA (Web Form)
+    // ==========================================
+
+    /**
+     * Menyimpan antrian baru dari Form Web Mahasiswa beserta file dokumen
+     */
     public function store(Request $request)
     {
-        // Tetap membuat antrian di database mobile seperti biasa
-        $antrian = Antrian::create([
-            'nama'=>$request->nama,
-            'nim'=>$request->nim,
-            'email'=>$request->email,
-            'whatsapp'=>$request->whatsapp,
-            'jenis_layanan'=>$request->jenis_layanan,
-            'kategori_layanan'=>$request->kategori_layanan,
-            'metode_pembayaran'=>$request->metode_pembayaran,
-            'waktu_layanan'=>$request->waktu_layanan,
-            'nomor_antrian'=>$request->nomor_antrian,
-            'tanggal_antrian'=>now(),
-            'status'=>$request->status,
-            'bukti_transfer'=>$request->bukti_transfer
+        // 1. Validasi file berkas
+        $request->validate([
+            'jenis_layanan' => 'required|string',
+            'dokumen'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        // DITAMBAHKAN: Lempar data ke Web Admin secara otomatis via REST API
-        try {
-            // Sesuaikan URL dan Port ini dengan server Web Admin Laravel kamu yang sedang running
-            $webAdminUrl = 'http://127.0.0.1:8000/api/tambah-antrian-mobile'; 
+        // Inisialisasi variabel path
+        $pathBersih = null;
 
-            Http::timeout(5)->post($webAdminUrl, [
-                'nomor_antrian' => $antrian->nomor_antrian,
-                'nama'          => $antrian->nama,
-                'nim'           => $antrian->nim,
-                'jenis_layanan' => $antrian->jenis_layanan,
-            ]);
-        } catch (\Exception $e) {
-            // Jika web admin mati/gagal diakses, backend mobile tidak akan crash dan tetap return sukses ke Flutter
-            \Log::error("Gagal sinkronisasi antrean baru ke Web Admin: " . $e->getMessage());
+        // 2. Proses upload file ke folder 'dokumen_antrian'
+        if ($request->hasFile('dokumen')) {
+            // Ini akan memindahkan file fisik ke storage/app/public/dokumen_antrian
+            // Dan menghasilkan string bersih seperti: "dokumen_antrian/nama_acak.pdf"
+            $pathBersih = $request->file('dokumen')->store('dokumen_antrian', 'public');
         }
 
-        return response()->json([
-            'message'=>'berhasil',
-            'data'=>$antrian
-        ]);
-    }
-
-    public function riwayat($nim)
-    {
-        $data = Antrian::where('nim', $nim)
-            ->latest()
-            ->get();
-
-        return response()->json($data);
-=======
-    // ==========================================
-    // FUNGSI UNTUK MAHASISWA (Sudah Ada)
-    // ==========================================
-
-    public function store(Request $request)
-    {
+        // 3. Simpan data ke MySQL
         $antrian = Antrian::create([
-            'user_id'           => $request->user_id,
+            'user_id'           => auth()->id(),
             'nama'              => $request->nama,
             'nim'               => $request->nim,
             'email'             => $request->email,
@@ -79,16 +46,20 @@ class AntrianController extends Controller
             'waktu_layanan'     => $request->waktu_layanan,
             'nomor_antrian'     => $request->nomor_antrian,
             'tanggal_antrian'   => now(),
-            'status'            => $request->status ?? 'menunggu', // Beri default 'menunggu' jika status kosong
+            'status'            => $request->status ?? 'Menunggu',
+            
+            // PENTING: ISI PAKAI VARIABEL $pathBersih, JANGAN PAKAI $request->dokumen!
+            'dokumen'           => $pathBersih, 
+            
             'bukti_transfer'    => $request->bukti_transfer
         ]);
 
-        return response()->json([
-            'message' => 'berhasil',
-            'data'    => $antrian
-        ]);
+        return redirect()->back()->with('success', 'Antrian dan berkas berhasil disimpan!');
     }
 
+    /**
+     * Menampilkan riwayat antrian berdasarkan NIM mahasiswa
+     */
     public function riwayat($nim)
     {
         $data = Antrian::where('nim', $nim)->latest()->get();
@@ -96,13 +67,12 @@ class AntrianController extends Controller
     }
 
     // ==========================================
-    // FUNGSI TAMBAHAN UNTUK CRUD ADMIN (Wajib Ditambahkan)
+    // FUNGSI UNTUK CRUD ADMIN
     // ==========================================
 
     // 1. READ ALL - Admin melihat semua antrian dari seluruh mahasiswa
     public function index()
     {
-        // Mengambil semua data antrian, diurutkan dari yang terbaru
         $data = Antrian::latest()->get(); 
         
         return response()->json([
@@ -128,7 +98,7 @@ class AntrianController extends Controller
         ], 200);
     }
 
-    // 3. UPDATE - Admin mengubah status (misal: diproses/selesai) atau data lainnya
+    // 3. UPDATE - Admin mengubah status atau data lainnya
     public function update(Request $request, $id)
     {
         $antrian = Antrian::find($id);
@@ -139,7 +109,6 @@ class AntrianController extends Controller
             ], 404);
         }
 
-        // Admin bisa mengupdate status, nomor_antrian, dll.
         $antrian->update($request->all());
 
         return response()->json([
@@ -148,7 +117,7 @@ class AntrianController extends Controller
         ], 200);
     }
 
-    // 4. DELETE - Admin menghapus data antrian jika dibatalkan/salah input
+    // 4. DELETE - Admin menghapus data antrian
     public function destroy($id)
     {
         $antrian = Antrian::find($id);
@@ -164,6 +133,5 @@ class AntrianController extends Controller
         return response()->json([
             'message' => 'Antrian berhasil dihapus oleh Admin'
         ], 200);
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
     }
 }

@@ -10,24 +10,14 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PembayaranController;
 use App\Http\Controllers\Api\AntrianController;
-<<<<<<< HEAD
-<<<<<<< HEAD
 use App\Http\Controllers\Api\MidtransController;
-=======
-=======
-use App\Http\Controllers\MidtransController;
->>>>>>> 9446722688f7e32da5697ace240f522e24b1adc7
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/antrian/store', [ApiAntreanController::class, 'storeFromApi']);
     
 });
 
-<<<<<<< HEAD
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
 
-=======
->>>>>>> 9446722688f7e32da5697ace240f522e24b1adc7
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -70,7 +60,7 @@ Route::get('/test-pembayaran', function () {
 Route::post('/antrian', [AntrianController::class, 'store']);
 Route::get('/riwayat/{nim}', [AntrianController::class, 'riwayat']);
 
-<<<<<<< HEAD
+
 Route::post(
 
 '/midtrans/{id}',
@@ -81,13 +71,11 @@ Route::post(
 
 );
 
-=======
 // ==========================================
 // ROUTE TAMBAHAN UNTUK CRUD ADMIN (Wajib Ditambahkan)
 // ==========================================
 // 1. Admin GET semua antrian dari seluruh mahasiswa
 Route::get('/antrian', [AntrianController::class, 'index']);
->>>>>>> 7533c789fe1873f8825cc52f4d67306ded12525d
 
 // 2. Admin GET detail satu data antrian berdasarkan ID
 Route::get('/antrian/{id}', [AntrianController::class, 'show']);

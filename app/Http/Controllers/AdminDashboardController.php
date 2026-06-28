@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\QueueHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use App\Models\User;
 use Illuminate\Support\Facades\Http; // DITAMBAHKAN: Untuk hit REST API ke Mobile
 
 class AdminDashboardController extends Controller
@@ -16,7 +17,8 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
+        $dataAdmin = User::where('role', 'admin')->latest()->paginate(7);
+        return view('admin.dashboard', compact('dataAdmin'));
     }
 
     /**

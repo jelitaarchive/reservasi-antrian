@@ -26,8 +26,10 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard'); 
         }
 
+        user()->update(['last_login_at' => now()]);
+
         // Jika bukan admin (mahasiswa), lempar ke dashboard biasa
-        return redirect()->route('');
+        return redirect()->route('dashboard');
     }
 
     public function store(LoginRequest $request): RedirectResponse
