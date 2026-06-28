@@ -17,6 +17,7 @@ use App\Http\Controllers\AdminVerifikasiController;
 use App\Http\Controllers\AdminMonitoringController;
 use App\Http\Controllers\AdminKelolaController; 
 use App\Http\Controllers\AdminLaporanController;
+use App\Http\Controllers\RiwayatController;
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
@@ -67,6 +68,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/laporan-pdf', [AdminLaporanController::class, 'index'])->name('admin.laporan');
     Route::get('/laporan-pdf/download', [AdminLaporanController::class, 'downloadPdf'])->name('admin.laporan.download');
     
+    // 9. Riwayat Antrian
+    Route::get(
+        '/riwayat-antrian',
+        [RiwayatController::class,'index']
+    )->name('admin.riwayat');
 });
 
 Route::get('/admin/kelola-layanan', [AdminLayananController::class, 'index'])->name('admin.kelola-layanan');
