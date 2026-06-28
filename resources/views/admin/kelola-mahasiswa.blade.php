@@ -53,7 +53,7 @@
                         <span class="font-medium text-sm">Kelola Admin</span>
                     </a>
 
-                    <a href="#" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.laporan') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">picture_as_pdf</span>
                         <span class="font-medium text-sm">Laporan PDF</span>
                     </a>
