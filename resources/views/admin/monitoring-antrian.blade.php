@@ -26,7 +26,7 @@
                         <span class="material-icons-outlined text-xl">dashboard</span>
                         <span class="font-medium text-sm">Kelola Antrian</span>
                     </a>
-                    <a href="{{ route('admin.kelola.layanan') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
+                    <a href="{{ route('admin.kelola-layanan') }}" class="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition p-3">
                         <span class="material-icons-outlined text-xl">headset_mic</span>
                         <span class="font-medium text-sm">Kelola Layanan</span>
                     </a>

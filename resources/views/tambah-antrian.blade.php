@@ -12,29 +12,16 @@
           step: 1, 
           waktu_layanan: '', 
           jenis_layanan: '', 
-          nomor_acak: '',
           userId: '{{ Auth::user()->id ?? 'guest' }}',
           init() {
-              // Reset atau cek batas antrian di localStorage berdasarkan ID User
               let key = 'antrian_count_' + this.userId;
               if (!localStorage.getItem(key)) {
                   localStorage.setItem(key, '0');
               }
           },
-          generateNomor() {
-              let infoSesi = this.waktu_layanan === '08.00-12.00 WIB' ? 'A' : 'B';
-              let angka = Math.floor(Math.random() * 15) + 1;
-              let formatAngka = angka < 10 ? '0' + angka : angka;
-              this.nomor_acak = infoSesi + '-' + formatAngka;
-          },
           simpanAntrian() {
-                // 1. Ambil tanggal hari ini format YYYY-MM-DD dengan JavaScript lokalan browser
                 const hariIni = new Date().toISOString().split('T')[0]; 
-                
-                // 2. Selipkan tanggal hari ini ke dalam KEY localStorage
                 let keyCount = 'antrian_count_' + this.userId + '_' + hariIni;
-                
-                // 3. Ambil hitungan berdasarkan tanggal hari ini
                 let currentCount = parseInt(localStorage.getItem(keyCount)) || 0;
                 
                 if (currentCount >= 3) {
@@ -42,11 +29,9 @@
                     return;
                 }
                 
-                // 4. Tambah hitungan antrian khusus hari ini & buat nomor acak
                 localStorage.setItem(keyCount, (currentCount + 1).toString());
-                this.generateNomor();
 
-                // 5. Submit form asli ke database MySQL
+                // Langsung submit form, penentuan nomor urut dikerjakan oleh AntreanController
                 this.$nextTick(() => {
                     document.getElementById('queueForm').submit();
                 });
@@ -124,8 +109,7 @@
                 </div>
 
                 <form id="queueForm" action="{{ route('antrian.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf <input type="hidden" name="nomor_antrian" :value="nomor_acak">
-
+                    @csrf 
                     <div x-show="step === 1" class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all">
                         <h3 class="text-2xl font-bold text-gray-800 tracking-tight">Biodata</h3>
                         <p class="text-gray-400 text-xs mt-0.5 mb-8">Lengkapi biodata dibawah ini!</p>
@@ -202,7 +186,7 @@
                                         <span class="text-xs text-gray-600">Pengajuan Keringanan UKT</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="kategori_layanan" value="Pembayaran Non-Akademik" :required="jenis_layanan === 'Pembayaran'"e class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <input type="radio" name="kategori_layanan" value="Pembayaran Non-Akademik" :required="jenis_layanan === 'Pembayaran'" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <span class="text-xs text-gray-600">Pembayaran Non-Akademik</span>
                                     </label>
                                 </div>
@@ -265,7 +249,7 @@
                             syncFilesToInput() {
                                 const dataTransfer = new DataTransfer();
                                 this.fileList.forEach(file => dataTransfer.items.add(file));
-                                document.getElementById('berkas').files = dataTransfer.files;
+                                document.getElementById('dokumen').files = dataTransfer.files;
                             }
                          }">
                         <button type="button" @click="step = 2" class="flex items-center text-gray-400 hover:text-gray-700 mb-4 transition">
@@ -277,13 +261,11 @@
                         <div class="space-y-6">
                             <div class="flex flex-col items-center justify-center w-full">
                                 <label class="flex flex-col items-center justify-center w-full min-h-40 border border-gray-300 border-dashed rounded-[20px] cursor-pointer bg-white hover:bg-gray-50 transition relative p-5">
-                                    
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span class="material-icons-outlined text-gray-400 text-3xl mb-2">add</span>
                                         <p class="text-xs font-semibold text-gray-500">Tambahkan Berkas Dokumen</p>
                                         <p class="text-[10px] text-gray-400 mt-1">Klik lagi untuk menambah file .pdf lainnya</p>
                                     </div>
-
                                     <input type="file" id="dokumen" name="dokumen" required accept=".pdf" class="hidden" @change="handleFiles($event)" />
                                 </label>
                             </div>
@@ -342,31 +324,6 @@
                                 <span>Kirim</span>
                                 <span class="material-icons-outlined text-sm">arrow_forward</span>
                             </button>
-                        </div>
-                    </div>
-
-                    <div x-show="step === 5" x-cloak class="bg-white rounded-[32px] border border-gray-200 shadow-sm p-10 transition-all flex flex-col items-center">
-                        <h3 class="text-lg font-bold text-gray-500 tracking-tight mt-2">Nomor Antrian</h3>
-                        <h3 class="text-lg font-bold text-gray-500 tracking-tight leading-none mb-6">Anda</h3>
-                        
-                        <div class="text-[64px] font-bold text-gray-700 tracking-tight my-4 leading-none" 
-                             x-text="nomor_acak"></div>
-                             
-                        <div class="w-full max-w-md mt-8 space-y-4 text-xs px-4">
-                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
-                                <span class="text-gray-400 font-medium">Jenis Pelayanan</span>
-                                <span class="text-gray-700 font-bold" x-text="jenis_layanan">Pembayaran</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400 font-medium">Waktu Pelayanan</span>
-                                <span class="text-gray-700 font-bold" x-text="waktu_layanan">08.00-12.00 WIB</span>
-                            </div>
-                        </div>
-                        <div class="w-full pt-12">
-                            <a href="{{ route('monitoring.antrian') }}" class="w-full py-2.5 bg-gray-900 border border-transparent rounded-full text-xs font-bold text-white hover:bg-gray-800 transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                <span>Monitoring Antrian</span>
-                                <span class="material-icons-outlined text-sm">arrow_forward</span>
-                            </a>
                         </div>
                     </div>
 

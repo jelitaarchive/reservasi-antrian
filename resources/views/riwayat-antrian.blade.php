@@ -75,17 +75,13 @@
                 <div class="space-y-4">
                     @forelse($histories as $history)
                         @php
-                            // Ambil status & deskripsi, ubah ke huruf kecil semua agar deteksinya akurat
                             $status = isset($history->status) ? strtolower($history->status) : '';
                             $description = isset($history->description) ? strtolower($history->description) : '';
-                            
-                            // Jika status berisi kata 'batal', 'dibatalkan', atau deskripsinya ada kata 'batal'
                             $isBatal = (Str::contains($status, 'batal') || Str::contains($description, 'batal'));
                         @endphp
 
                         <div class="bg-white border border-gray-200 rounded-[24px] p-6 shadow-sm flex flex-col md:flex-row md:items-start md:justify-between gap-4 hover:border-gray-300 transition-all">
                             <div class="flex items-start space-x-4 flex-1">
-                                {{-- 1. Ikon Kiri Berdasarkan Status (Hanya 2 Status) --}}
                                 @if($isBatal)
                                     <div class="p-3 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center border border-red-100">
                                         <span class="material-icons-outlined text-2xl">cancel</span>
@@ -98,9 +94,9 @@
 
                                 <div class="flex-1">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <h4 class="font-bold text-gray-800 text-sm">{{ $history->title ?? 'Pelayanan Administrasi' }}</h4>
+                                        {{-- MODIFIKASI: Menampilkan Kategori Layanan --}}
+                                        <h4 class="font-bold text-gray-800 text-sm">{{ $history->kategori_layanan ?? 'Pelayanan Antrian' }}</h4>
                                         
-                                        {{-- 2. Badge Status (Hanya 2 Status) --}}
                                         @if($isBatal)
                                             <span class="px-2.5 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold border border-red-200">Gagal / Batal</span>
                                         @else
@@ -110,10 +106,14 @@
                                     
                                     <p class="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
                                         <span class="material-icons-outlined text-xs">calendar_today</span>
-                                        {{ $history->date ? \Carbon\Carbon::parse($history->date)->translatedFormat('d F Y') : '-' }}
+                                        {{-- MODIFIKASI: Menggunakan tanggal_antrian --}}
+                                        {{ $history->tanggal_antrian ? \Carbon\Carbon::parse($history->tanggal_antrian)->translatedFormat('d F Y') : '-' }}
+                                        
                                         <span class="mx-1">•</span>
+                                        
                                         <span class="material-icons-outlined text-xs">schedule</span>
-                                        {{ $history->start_time ? substr($history->start_time, 0, 5) : '--:--' }} - {{ $history->end_time ? substr($history->end_time, 0, 5) : '--:--' }} WIB
+                                        {{-- MODIFIKASI: Menggunakan waktu_layanan --}}
+                                        {{ $history->waktu_layanan ?? '--:--' }} WIB
                                     </p>
                                     
                                     @if($history->description)
@@ -122,13 +122,10 @@
                                         </p>
                                     @endif
 
-                                    {{-- 3. Perbaikan Deteksi Dokumen Berkas --}}
                                     <div class="mt-3">
                                         @php
-                                            // Bersihkan spasi, tanda kutip, atau kurung siku bawaan array json text
                                             $docRaw = trim($history->dokumen ?? '');
                                             $docRaw = trim($docRaw, '[]"\''); 
-                                            // Pecah string berdasarkan koma, buang array yang kosong
                                             $documents = array_filter(explode(',', $docRaw), 'trim');
                                         @endphp
 
@@ -158,9 +155,10 @@
                                 </div>
                             </div>
                             
-                            <div class="text-right flex md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 pt-3 md:pt-0 border-gray-100 min-w-[80px]">
-                                <span class="text-xs font-bold text-gray-400 md:mb-1 block">ID Sesi</span>
-                                <span class="text-xl font-black text-blue-600 tracking-tight">#{{ sprintf('%02d', $history->id) }}</span>
+                            {{-- MODIFIKASI: Mengganti label ID Sesi menjadi No. Antrian dan memanggil nomor_antrian --}}
+                            <div class="text-right flex md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 pt-3 md:pt-0 border-gray-100 min-w-[100px]">
+                                <span class="text-xs font-bold text-gray-400 md:mb-1 block">No. Antrian</span>
+                                <span class="text-xl font-black text-blue-600 tracking-tight">{{ $history->nomor_antrian ?? '-' }}</span>
                             </div>
                         </div>
                     @empty
