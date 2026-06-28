@@ -28,6 +28,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     
     // 1. Dashboard Utama Admin -> Jalur: /admin/dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard/data', [AdminDashboardController::class, 'getDashboardData'])->name('admin.dashboard.data');
     
     // 2. Kelola Antrian -> Jalur: /admin/kelola-antrian
     Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');

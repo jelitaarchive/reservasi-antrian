@@ -92,25 +92,25 @@
                     
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Total Antrian Hari Ini</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">45</h3>
+                        <h3 id="stat-total" class="text-4xl font-bold text-gray-900 mb-2">0</h3>
                         <p class="text-[10px] text-gray-400">Total keseluruhan</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Antrian Selesai</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">30</h3>
+                        <h3 id="stat-selesai" class="text-4xl font-bold text-gray-900 mb-2">0</h3>
                         <p class="text-[10px] text-gray-400">Telah dilayani</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Belum Dilayani</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">15</h3>
+                        <h3 id="stat-belum" class="text-4xl font-bold text-gray-900 mb-2">0</h3>
                         <p class="text-[10px] text-gray-400">Belum dilayani</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Mahasiswa Dilayani</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">30</h3>
+                        <h3 id="stat-dilayani" class="text-4xl font-bold text-gray-900 mb-2">0</h3>
                         <p class="text-[10px] text-gray-400">Orang hari ini</p>
                     </div>
 
@@ -182,6 +182,26 @@
             </div>
         </main>
     </div>
+
+    <script>
+    function refreshData() {
+        fetch("{{ route('admin.dashboard.data') }}")
+            .then(response => response.json())
+            .then(data => {
+                // Mengupdate angka berdasarkan ID
+                document.getElementById('stat-total').innerText = data.total;
+                document.getElementById('stat-selesai').innerText = data.selesai;
+                document.getElementById('stat-belum').innerText = data.belum;
+                document.getElementById('stat-dilayani').innerText = data.dilayani;
+            });
+    }
+
+    // Panggil fungsi setiap 5 detik
+    setInterval(refreshData, 5000);
+    
+    // Panggil saat pertama kali halaman dimuat
+    refreshData();
+</script>
 
 </body>
 </html>

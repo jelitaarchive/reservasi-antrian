@@ -60,6 +60,17 @@ class AdminDashboardController extends Controller
         ));
     }
 
+    public function getDashboardData()
+    {
+        $hariIni = \Illuminate\Support\Carbon::today();
+        return response()->json([
+            'total'    => \App\Models\Antrian::whereDate('tanggal_antrian', $hariIni)->count(),
+            'selesai'  => \App\Models\Antrian::whereDate('tanggal_antrian', $hariIni)->where('status', 'selesai')->count(),
+            'belum'    => \App\Models\Antrian::whereDate('tanggal_antrian', $hariIni)->where('status', 'menunggu')->count(),
+            'dilayani' => \App\Models\Antrian::whereDate('tanggal_antrian', $hariIni)->where('status', 'melayani')->count(),
+        ]);
+    }
+
     /**
      * Update status antrian dan sinkronisasi ke REST API Mobile
      */
