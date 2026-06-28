@@ -92,25 +92,25 @@
                     
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Total Antrian Hari Ini</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">45</h3>
+                        <h3 id="stat-total" class="text-4xl font-bold">0</h3>
                         <p class="text-[10px] text-gray-400">Total keseluruhan</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Antrian Selesai</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">30</h3>
+                        <h3 id="stat-selesai" class="text-4xl font-bold">0</h3>
                         <p class="text-[10px] text-gray-400">Telah dilayani</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Belum Dilayani</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">15</h3>
+                        <h3 id="stat-belum" class="text-4xl font-bold">0</h3>
                         <p class="text-[10px] text-gray-400">Belum dilayani</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-6 shadow-sm text-center border border-gray-100">
                         <p class="text-xs font-semibold text-gray-500 mb-2">Mahasiswa Dilayani</p>
-                        <h3 class="text-4xl font-bold text-gray-900 mb-2">30</h3>
+                        <<h3 id="stat-dilayani" class="text-4xl font-bold">0</h3>
                         <p class="text-[10px] text-gray-400">Orang hari ini</p>
                     </div>
 
@@ -123,58 +123,16 @@
                         
                         <div class="relative w-full h-56 bg-white bg-opacity-60 rounded-xl p-4 flex flex-col justify-between">
                             <div class="text-xs text-gray-400 text-center flex flex-col justify-between h-full w-full">
-                                <div class="border-b border-gray-300 w-full pb-6 text-left">80</div>
-                                <div class="border-b border-gray-300 w-full pb-6 text-left">60</div>
-                                <div class="border-b border-gray-300 w-full pb-6 text-left">40</div>
-                                <div class="border-b border-gray-300 w-full pb-6 text-left">20</div>
-                                <div class="text-left">0</div>
-                            </div>
-                            
-                            <div class="flex justify-between text-[10px] font-semibold text-gray-600 px-4 mt-2">
-                                <span>13 Mei</span>
-                                <span>14 Mei</span>
-                                <span>15 Mei</span>
-                                <span>16 Mei</span>
-                                <span>17 Mei</span>
-                                <span>18 Mei</span>
-                                <span>19 Mei</span>
-                            </div>
+                                <canvas id="antrianChart"></canvas>
+                            </div>                           
                         </div>
                     </div>
 
                     <div class="lg:col-span-5 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                         <h4 class="text-sm font-bold text-gray-800 mb-8">Antrian per Layanan</h4>
-                        
-                        <div class="flex items-center justify-between gap-6">
-                            <div class="w-32 h-32 rounded-full border-[18px] border-blue-500 relative flex items-center justify-center">
-                                <div class="absolute inset-0 rounded-full border-[18px] border-t-red-500 border-r-yellow-500 border-b-cyan-400 border-l-emerald-500 scale-105"></div>
-                            </div>
-
-                            <div class="flex-1 space-y-4 text-xs font-semibold text-gray-700">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                                        <span>Pembayaran UKT</span>
-                                    </div>
-                                    <span class="text-gray-900">20</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="w-3 h-3 bg-cyan-400 rounded-full"></span>
-                                        <span>KRS</span>
-                                    </div>
-                                    <span class="text-gray-900">8</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="w-3 h-3 bg-purple-500 rounded-full"></span>
-                                        <span>Lainnya</span>
-                                    </div>
-                                    <span class="text-gray-900">2</span>
-                                </div>
-                            </div>
+                        <div class="relative w-full h-48">
+                            <canvas id="layananChart"></canvas>
                         </div>
-
                     </div>
 
                 </div>
@@ -182,6 +140,48 @@
             </div>
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 1. Update Kartu
+        function updateStats() {
+            fetch("{{ route('admin.dashboard.data') }}")
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('stat-total').innerText = data.total;
+                    document.getElementById('stat-selesai').innerText = data.selesai;
+                    document.getElementById('stat-belum').innerText = data.belum;
+                    document.getElementById('stat-dilayani').innerText = data.dilayani;
+                });
+        }
+
+        // 2. Grafik Bar 7 Hari
+        const chart1 = new Chart(document.getElementById('antrianChart'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Antrian', data: [], borderColor: '#3b82f6' }] }
+        });
+
+        // 3. Grafik Donat Layanan
+        const chart2 = new Chart(document.getElementById('layananChart'), {
+            type: 'doughnut',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: ['#eab308', '#22d3ee', '#a855f7'] }] }
+        });
+
+        function refreshDashboard() {
+            updateStats();
+            // Update Chart 1
+            fetch("{{ route('admin.dashboard.chart-data') }}").then(r => r.json()).then(d => {
+                chart1.data.labels = d.labels; chart1.data.datasets[0].data = d.data; chart1.update();
+            });
+            // Update Chart 2
+            fetch("{{ route('admin.dashboard.layanan-data') }}").then(r => r.json()).then(d => {
+                chart2.data.labels = d.labels; chart2.data.datasets[0].data = d.counts; chart2.update();
+            });
+        }
+
+        setInterval(refreshDashboard, 5000); // Auto update setiap 5 detik
+        refreshDashboard();
+    </script>
 
 </body>
 </html>

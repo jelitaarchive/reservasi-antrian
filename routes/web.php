@@ -31,6 +31,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     
     // 1. Dashboard Utama Admin -> Jalur: /admin/dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard/data', [AdminDashboardController::class, 'getDashboardData'])->name('admin.dashboard.data');
+    Route::get('/dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('admin.dashboard.chart-data');
+    Route::get('/dashboard/layanan-data', [AdminDashboardController::class, 'getLayananData'])->name('admin.dashboard.layanan-data');
     
     // 2. Kelola Antrian -> Jalur: /admin/kelola-antrian
     Route::get('/kelola-antrian', [AdminDashboardController::class, 'kelolaAntrian'])->name('admin.kelola.antrian');
@@ -63,7 +66,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kelola-admin', [AdminKelolaController::class, 'index'])->name('admin.kelola-admin');
     Route::post('/kelola-admin', [AdminKelolaController::class, 'store'])->name('admin.store');
     Route::delete('/kelola-admin/{id}/delete', [AdminKelolaController::class, 'destroy'])->name('admin.destroy');
-
+    
     // 10. Fitur Laporan Bulanan & Download PDF
     Route::get('/laporan-pdf', [AdminLaporanController::class, 'index'])->name('admin.laporan');
     Route::get('/laporan-pdf/download', [AdminLaporanController::class, 'downloadPdf'])->name('admin.laporan.download');

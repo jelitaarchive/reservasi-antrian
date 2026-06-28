@@ -11,6 +11,43 @@ use Illuminate\Support\Facades\Http; // DITAMBAHKAN: Untuk hit REST API ke Mobil
 
 class AdminDashboardController extends Controller
 {
+    // Mengirim data statistik kartu
+    public function getDashboardData()
+    {
+        $today = Carbon::today();
+        return response()->json([
+            'total'    => Antrian::whereDate('tanggal_antrian', $today)->count(),
+            'selesai'  => Antrian::whereDate('tanggal_antrian', $today)->where('status', 'selesai')->count(),
+            'belum'    => Antrian::whereDate('tanggal_antrian', $today)->where('status', 'menunggu')->count(),
+            'dilayani' => Antrian::whereDate('tanggal_antrian', $today)->where('status', 'melayani')->count(),
+        ]);
+    }
+
+    // Mengirim data grafik 7 hari terakhir
+    public function getChartData()
+    {
+        $labels = []; $data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $labels[] = $date->format('d M');
+            $data[] = Antrian::whereDate('tanggal_antrian', $date->toDateString())->count();
+        }
+        return response()->json(['labels' => $labels, 'data' => $data]);
+    }
+
+    // Mengirim data untuk donat chart
+    public function getLayananData()
+    {
+        $layanan = Layanan::withCount(['antrian' => function ($q) {
+            $q->whereDate('tanggal_antrian', Carbon::today());
+        }])->get();
+
+        return response()->json([
+            'labels' => $layanan->pluck('nama_layanan'),
+            'counts' => $layanan->pluck('antrian_count')
+        ]);
+    }
+    
     /**
      * Tampilkan halaman utama dashboard admin.
      */
