@@ -15,7 +15,8 @@ use App\Http\Controllers\AdminLayananController;
 use App\Http\Controllers\AdminMahasiswaController;
 use App\Http\Controllers\AdminVerifikasiController;
 use App\Http\Controllers\AdminMonitoringController;
-use App\Http\Controllers\AdminKelolaController; // <-- Memanggil Controller Kelola Admin yang baru
+use App\Http\Controllers\AdminKelolaController; 
+use App\Http\Controllers\AdminLaporanController;
 
 // Halaman Utama / Landing Page
 Route::get('/', function () {
@@ -61,6 +62,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kelola-admin', [AdminKelolaController::class, 'index'])->name('admin.kelola-admin');
     Route::post('/kelola-admin', [AdminKelolaController::class, 'store'])->name('admin.store');
     Route::delete('/kelola-admin/{id}/delete', [AdminKelolaController::class, 'destroy'])->name('admin.destroy');
+
+    // 10. Fitur Laporan Bulanan & Download PDF
+    Route::get('/laporan-pdf', [AdminLaporanController::class, 'index'])->name('admin.laporan');
+    Route::get('/laporan-pdf/download', [AdminLaporanController::class, 'downloadPdf'])->name('admin.laporan.download');
     
 });
 
