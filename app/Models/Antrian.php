@@ -11,7 +11,6 @@ class Antrian extends Model
     use HasFactory;
 
     protected $table = 'antrians';
-
     protected $fillable = [
         'user_id',
         'nama',
